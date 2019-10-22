@@ -1,1 +1,4 @@
+Tasks:
 
+1. Finalize the viz system
+2. One functional specification 
