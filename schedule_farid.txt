@@ -1,1 +1,5 @@
-Haven't decided the tasks yet.
+Plans for this weeks:
+  - Drawing the candiadte UIs for the vis system
+  - Meeting with client to finalize the system 
+  - Writing the functional specs 
+  - Meeting with the team to sync up for next week
