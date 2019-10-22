@@ -1,1 +1,5 @@
+Tasks
 
+1. Create project structure (npm, basic
+3. Create sketches for UI design
+2. Create application layout (HTML/CSS)
