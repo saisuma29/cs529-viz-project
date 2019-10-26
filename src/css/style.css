@@ -1,0 +1,40 @@
+.row {
+    margin: 0;
+}
+
+.col-md-8, .col-md-4 {
+    padding: 0;
+}
+
+#app {
+    position: relative;
+    width: 100%;
+}
+
+#app-info {
+    height: 100vh;
+    padding: 10px;
+    background-color: #111;
+    color: #eee;
+}
+
+#loading {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-align: center;
+    color: lightgray;
+    z-index: 2;
+}
+
+canvas {
+    position: absolute;
+}
+
+#canvas3d {
+    display: block;
+}
+
+#canvas2d {
+    display: none;
+}
