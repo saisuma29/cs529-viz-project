@@ -1,9 +1,11 @@
 export class Play {
-  init(...shapes) {
+  init(layers, ...shapes) {
+    this.layers = layers;
     this.button = document.getElementById('play-button');
     this.slider = document.getElementById('time-range');
     this.isPlaying = false;
-    this.fps = 30;
+    this.fps = 60;
+    this.timestep = 12;
 
     // Play / Pause SVG shapes
     this.playShape =
@@ -20,6 +22,15 @@ export class Play {
     this.slider.addEventListener('input', () => {
       // Pause time + update shape
       this.pauseTimelapse(shapes);
+
+      // Update shapes to current time
+      let max = parseInt(this.slider.getAttribute('max'));
+      let t = (parseInt(this.slider.value)) % max;
+      this.slider.value = t;
+  
+      for (let shape of shapes) {
+        shape.update(this.layers[0], this.layers[1], this.layers[2], this.layers[3], t);
+      }
     });
   }
 
@@ -32,17 +43,17 @@ export class Play {
     }
     this.isPlaying = true;
 
-    let max = parseInt(this.slider.getAttribute('max')) + 1;
+    let max = parseInt(this.slider.getAttribute('max'));
 
     // Start up play timer
     this.timer = setInterval(() => {
       // Get time + 1
-      let t = (parseInt(this.slider.value) + 1) % max;
+      let t = (parseInt(this.slider.value) + this.timestep) % max;
       this.slider.value = t;
 
       // Update shapes to current time
       for (let shape of shapes) {
-        shape.update(t);
+        shape.update(this.layers[0], this.layers[1], this.layers[2], this.layers[3], t);
       }
     }, 1000 / this.fps);
   }
@@ -58,15 +69,6 @@ export class Play {
 
     // Clear play timer
     clearInterval(this.timer);
-
-    // Update shapes to current time
-    let max = parseInt(this.slider.getAttribute('max')) + 1;
-    let t = (parseInt(this.slider.value) + 1) % max;
-    this.slider.value = t;
-
-    for (let shape of shapes) {
-      shape.update(t);
-    }
   }
 
   swapButtonShape() {
