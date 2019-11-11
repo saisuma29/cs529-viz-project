@@ -8,119 +8,79 @@ import * as d3 from 'd3';
 import './css/style.css';
 
 // Custom classes: Canvas, Square, Plane
-import { Canvas } from './js/Canvas';
-import { Square } from './js/Square';
-import { Plane } from './js/Plane';
-import { ToggleButton } from './js/ToggleButton';
+import { Canvas3D } from './js/Canvas3D';
+import { Canvas2D } from "./js/Canvas2D";
+import { Mesh3D } from './js/Mesh3D';
+import { Heatmap } from './js/Heatmap';
+import { ToggleButtons } from './js/ToggleButtons';
+import { Play } from './js/Play';
 
 // CSV data
-import csv from './data/data.csv';
+import csv0 from './data/IBM_layer0_nodes_volt_js.csv';
+import csv1 from './data/IBM_layer1_nodes_volt_js.csv';
+import csv2 from './data/IBM_layer2_nodes_volt_js.csv';
+import csv3 from './data/IBM_layer3_nodes_volt_js.csv';
 
-const data = {};
-const canvas3D = new Canvas('canvas3d', 'div3d', true, false);
-const canvas2D = new Canvas('canvas2d', 'div2d', false, true);
-const greenSquare = new Square();
-const bluePlane = new Plane();
-const fps = 30;
-const timeRange = document.getElementById('time-range');
-var isPlaying = false;
-var timer;
-var t;
+const canvas3D = new Canvas3D('canvas3d', 'div3d', false);
+const canvas2D = new Canvas2D('canvas2d', 'div2d', true);
+const mesh3D = new Mesh3D();
+const heatmap = new Heatmap();
+const togglebuttons = new ToggleButtons();
+const play = new Play();
+var layer0, layer1, layer2, layer3;
 
-function animate() {
-  requestAnimationFrame(animate);
+// Load CSV files
+Promise.all([
+  d3.csv(csv0),
+  d3.csv(csv1),
+  d3.csv(csv2),
+  d3.csv(csv3)
+]).then(files => {
+  // Save data layers
+  layer0 = files[0];
+  layer1 = files[1];
+  layer2 = files[2];
+  layer3 = files[3];
 
-  // Re-render canvases
-  canvas3D.renderer.render(canvas3D.scene, canvas3D.camera);
-  canvas2D.renderer.render(canvas2D.scene, canvas2D.camera);
-}
-
-function playTimelapse() {
-  console.log('Start playing..');
-  let max = parseInt(timeRange.getAttribute('max')) + 1;
-  timer = setInterval(() => {
-    t = (parseInt(timeRange.value) + 1) % max;
-    timeRange.value = t;
-    console.log(t);
-
-    // Rotate green square
-    greenSquare.mesh.rotation.x = (Math.PI * t) / (max - 1);
-    greenSquare.mesh.rotation.y = (Math.PI * t) / (max - 1);
-
-    // Rotate blue rectangle
-    bluePlane.mesh.rotation.z = (Math.PI * t) / (max - 1);
-  }, 1000 / fps);
-}
-
-function pauseTimelapse() {
-  console.log('Pause playing..');
-  clearInterval(timer);
-}
+  // Run application
+  run();
+});
 
 function run() {
   // Remove loading message
   document.getElementById('loading').remove();
 
-  // Create shapes now that data is loaded
-  greenSquare.create(1, 1, 1, 0x00ff00);
-  canvas3D.addToScene(greenSquare.mesh);
+  // Create 3D mesh
+  mesh3D.init(layer0, layer1, layer2, layer3);
+  canvas3D.addToScene(mesh3D.plane0);
+  canvas3D.addToScene(mesh3D.plane1);
+  canvas3D.addToScene(mesh3D.plane2);
+  canvas3D.addToScene(mesh3D.plane3);
 
-  bluePlane.create(2, 1, 0x0000ff);
-  canvas2D.addToScene(bluePlane.mesh);
+  // Create 2D heatmap
+  heatmap.init(layer0, layer1, layer2, layer3, canvas2D.divId);
+  // canvas2D.addToScene(heatmap.mesh);
 
-  // 3D / 2D Toggle buttons
-  for (const element of document.getElementsByClassName('toggle-btn')) {
-    // Show button
-    element.classList.remove('d-none');
+  // Enable 3D / 2D toggle buttons
+  togglebuttons.init(canvas3D, canvas2D);
 
-    // Set onclick listener
-    element.addEventListener('click', () => {
-      // If not already clicked on
-      if (!element.classList.contains('active')) {
-        canvas3D.swapCanvasSize();
-        canvas2D.swapCanvasSize();
-      }
-    });
-  }
-
-  // Play button
-  const playBtn = document.getElementById('play-button');
-  let play = 'M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28';
-  let pause = 'M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26';
-
-  // Set onclick listener
-  playBtn.addEventListener('click', e => {
-    // Swap animation
-    let animation = document.getElementById('animation');
-    animation.setAttribute('from', isPlaying ? pause : play);
-    animation.setAttribute('to', isPlaying ? play : pause);
-
-    // Begin animation
-    animation.beginElement();
-
-    // Toggle isPlaying
-    isPlaying = !isPlaying;
-
-    // Play / pause timelapse
-    isPlaying ? playTimelapse() : pauseTimelapse();
-  });
+  // Enable play button
+  play.init([layer0, layer1, layer2, layer3], mesh3D, heatmap);
 
   // Resize canvas on window resize
   window.onresize = () => {
     canvas3D.resize();
-    canvas2D.resize();
+    // canvas2D.resize();
   };
 
   // Begin animation loop
   animate();
 }
 
-// Load CSV
-d3.csv(csv, row => {
-  // Build data object
-  data[row['time (s)']] = row;
-}).then(() => {
-  console.log(data);
-  // Run application
-  run();
-});
+function animate() {
+  requestAnimationFrame(animate);
+
+  // Re-render canvases
+  canvas3D.renderer.render(canvas3D.scene, canvas3D.camera);
+  // canvas2D.renderer.render(canvas2D.scene, canvas2D.camera);
+}
