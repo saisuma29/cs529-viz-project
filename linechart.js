@@ -22,12 +22,6 @@ function init(layer0, layer1, layer2, layer3) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // var colorScale = d3.scaleSequential(d3.interpolateWarm)
-    //     .domain([0.0001, 0.03])
-
-    // var colorScale1 = d3.scaleSequential(d3.interpolateWarm)
-    //     .domain([1.6, 1.8])
-
     var content0 = [];
     var content1 = [];
     var content2 = [];
@@ -58,12 +52,7 @@ function init(layer0, layer1, layer2, layer3) {
         .domain([-0.01, 2.0]) // input 
         .range([height, 0]); // output 
 
-    // // X scale
-    // var xScale1 = d3.scaleLinear()
-    //     .domain([0, 6000]) // input
-    //     .range([0, width]); // output
-
-    // // Y scale
+    // // Y scale for layer1 & 3
     // var yScale1 = d3.scaleLinear()
     //     .domain([1.5, 2.0]) // input 
     //     .range([height, 0]); // output 
