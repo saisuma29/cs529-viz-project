@@ -30,7 +30,7 @@ Install the dependecies:
 npm install
 ```
 
-## Build
+## Build for Production
 
 Run webpack to bundle our source files (output to ```dist``` folder):
 

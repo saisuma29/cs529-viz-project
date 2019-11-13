@@ -6,11 +6,12 @@
   </head>
   <body style="background-color: #222; color: #ddd;">
     <div class="row">
-      <!-- Main application view -->
+      <!-- Main view -->
       <div class="col-lg-8">
         <div id="app">
           <div id="loading">Loading data...</div>
 
+          <!-- Toggle buttons -->
           <div id="toggle-view" class="d-none">
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
               <!-- 3D toggle button -->
@@ -25,6 +26,7 @@
             </div>
           </div>
 
+          <!-- Play button + time slider -->
           <div id="time-div">
             <div class="d-flex align-items-center">
               <!-- Play / pause button (source: https://codepen.io/kucerajacob/pen/WvPrJL) -->
@@ -67,25 +69,142 @@
                 id="time-range"
                 class="custom-range"
                 min="0"
-                max="6000"
+                step="1"
+                value="0"
+              />
+
+              <input
+                type="number"
+                id="time-input"
+                class="form-control form-control-sm text-light bg-dark border-dark"
+                min="0"
                 step="1"
                 value="0"
               />
             </div>
           </div>
 
+          <!-- 3D view -->
           <div id="div3d" class="mainview"></div>
 
-          <div id="div2d" class="subview"></div>
+          <!-- 2D view -->
+          <div id="div2d" class="subview">
+            <div id="heatmap-1"></div>
+            <div id="heatmap-2"></div>
+            <div id="heatmap-3"></div>
+            <div id="heatmap-4"></div>
+          </div>
         </div>
       </div>
 
       <!-- Sidebar info -->
       <div class="col-lg-4">
         <div id="app-info">
-          <h3>PowerVIS</h3>
-          <h5>Node Ranking</h5>
-          <div id="rank-list"></div>
+          <!-- Tabs -->
+          <nav>
+            <div class="nav nav-pills" id="nav-tab" role="tablist">
+              <a
+                class="nav-link active"
+                id="nodes-tab"
+                data-toggle="pill"
+                href="#nav-nodes"
+                role="tab"
+              >
+                Nodes
+              </a>
+              <a
+                class="nav-link"
+                id="system-tab"
+                data-toggle="pill"
+                href="#nav-system"
+                role="tab"
+              >
+                System
+              </a>
+            </div>
+          </nav>
+
+          <h2 id="title">PowerVIS</h2>
+
+          <hr class="border-dark" />
+
+          <!-- Tab content -->
+          <div class="tab-content" id="tabContent">
+            <!-- Nodes Content -->
+            <div
+              class="tab-pane fade show active"
+              id="nav-nodes"
+              role="tabpanel"
+            >
+              <h5>
+                Node Ranking - Layer :
+                <!-- Layer toggles -->
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <!-- Layer 0 toggle -->
+                  <label
+                    class="btn btn-sm btn-dark layer-rank-toggle"
+                    id="layer0-rank-toggle"
+                    data-layer="0"
+                  >
+                    <input type="radio" autocomplete="off" checked /> 0
+                  </label>
+
+                  <!-- Layer 1 toggle -->
+                  <label
+                    class="btn btn-sm btn-dark layer-rank-toggle active"
+                    id="layer1-rank-toggle"
+                    data-layer="1"
+                  >
+                    <input type="radio" autocomplete="off" checked /> 1
+                  </label>
+
+                  <!-- Layer 2 toggle -->
+                  <label
+                    class="btn btn-sm btn-dark layer-rank-toggle"
+                    id="layer2-rank-toggle"
+                    data-layer="2"
+                  >
+                    <input type="radio" autocomplete="off" checked /> 2
+                  </label>
+
+                  <!-- Layer 3 toggle -->
+                  <label
+                    class="btn btn-sm btn-dark layer-rank-toggle"
+                    id="layer3-rank-toggle"
+                    data-layer="3"
+                  >
+                    <input type="radio" autocomplete="off" checked /> 3
+                  </label>
+                </div>
+              </h5>
+
+              <!-- Node rank list -->
+              <div id="rank-list" class="my-4"></div>
+
+              <hr class="border-dark" />
+
+              <h5>
+                Voltage History - Node
+                <input
+                  type="number"
+                  id="node-input"
+                  class="form-control form-control-sm text-light bg-dark border-dark"
+                  min="0"
+                  step="1"
+                  value="0"
+                />
+              </h5>
+
+              <!-- Voltage graph -->
+              <div id="voltage-div" class="my-4"></div>
+            </div>
+
+            <!-- System Content -->
+            <div class="tab-pane fade" id="nav-system" role="tabpanel">
+              <h5>WASD wasd</h5>
+              <p>wasd wasd wasd waswasdw</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

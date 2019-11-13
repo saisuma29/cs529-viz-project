@@ -26,19 +26,16 @@ const canvas3D = new Canvas3D("canvas3d", "div3d", false);
 const canvas2D = new Canvas2D("canvas2d", "div2d", true);
 const mesh3D = new Mesh3D();
 const heatmap = new Heatmap();
-const togglebuttons = new ToggleButtons();
+const toggleButtons = new ToggleButtons();
 const nodeRanking = new NodeRanking();
 const play = new Play();
-var layer0, layer1, layer2, layer3;
+var layers;
 
 // Load CSV files
 Promise.all([d3.csv(csv0), d3.csv(csv1), d3.csv(csv2), d3.csv(csv3)]).then(
   files => {
     // Save data layers
-    layer0 = files[0];
-    layer1 = files[1];
-    layer2 = files[2];
-    layer3 = files[3];
+    layers = files;
 
     // Run application
     run();
@@ -50,29 +47,58 @@ function run() {
   document.getElementById("loading").remove();
 
   // Create 3D mesh
-  mesh3D.init(layer0, layer1, layer2, layer3);
+  mesh3D.init(layers);
   canvas3D.addToScene(mesh3D.plane0);
   canvas3D.addToScene(mesh3D.plane1);
   canvas3D.addToScene(mesh3D.plane2);
   canvas3D.addToScene(mesh3D.plane3);
 
   // Create 2D heatmap
-  heatmap.init(layer0, layer1, layer2, layer3, canvas2D.divId);
+  heatmap.init(layers, canvas2D.divId);
   // canvas2D.addToScene(heatmap.mesh);
 
-  nodeRanking.init(layer0, layer1, layer2, layer3);
+  nodeRanking.init(layers);
 
   // Enable 3D / 2D toggle buttons
-  togglebuttons.init(canvas3D, canvas2D);
+  toggleButtons.init(canvas3D, canvas2D);
 
   // Enable play button
-  play.init([layer0, layer1, layer2, layer3], mesh3D, /* heatmap, */ nodeRanking);
+  play.init(layers, mesh3D, heatmap, nodeRanking);
 
   // Resize canvas on window resize
   window.onresize = () => {
     canvas3D.resize();
-    // canvas2D.resize();
+    canvas2D.resize();
   };
+
+  // Layer toggles for rank list
+  const layerRankButtons = document.getElementsByClassName("layer-rank-toggle");
+  for (let button of layerRankButtons) {
+    // Set on click listener for each toggle
+    button.addEventListener("click", () => {
+      // Set layer for node ranking table
+      let index = parseInt(button.dataset.layer);
+      nodeRanking.currentLayer = index;
+
+      // Update to reflect change
+      nodeRanking.update(layers, play.slider.value);
+    });
+  }
+
+  // Time input
+  play.timeInput.addEventListener("input", () => {
+    // TODO will break app if invalid input
+    play.pauseTimelapse();
+
+    // Update shapes to current time
+    let t = parseInt(play.timeInput.value) % play.timeLength;
+    play.slider.value = t;
+    play.timeInput.value = t
+
+    for (let shape of [mesh3D, heatmap, nodeRanking]) {
+      shape.update(layers, t);
+    }
+  });
 
   // Begin animation loop
   animate();
