@@ -1,5 +1,5 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 export class Canvas3D {
   constructor(divId, containerId, isSubview = false) {
@@ -32,7 +32,7 @@ export class Canvas3D {
     this.canvas = document
       .getElementById(this.containerId)
       .appendChild(this.renderer.domElement);
-    this.canvas.setAttribute('id', this.divId);
+    this.canvas.setAttribute("id", this.divId);
 
     // Create controls
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -54,31 +54,37 @@ export class Canvas3D {
     if (this.isSubview) {
       document
         .getElementById(this.containerId)
-        .classList.replace('subview', 'mainview');
+        .classList.replace("subview", "mainview");
+
       this.isSubview = false;
     } else {
       document
         .getElementById(this.containerId)
-        .classList.replace('mainview', 'subview');
+        .classList.replace("mainview", "subview");
+
       this.isSubview = true;
     }
 
-    this.width = document.getElementById(this.containerId).clientWidth;
-    this.height = document.getElementById(this.containerId).clientHeight;
-
-    this.camera.aspect = this.width / this.height;
-    this.renderer.setSize(this.width, this.height);
-
     this.controls.enabled = !this.isSubview;
+
+    this.resize();
 
     this.resetCamera();
   }
 
   resize() {
-    this.width = document.getElementById(this.containerId).clientWidth;
-    this.height = document.getElementById(this.containerId).clientHeight;
+    if (this.isSubview) {
+      this.width = document.getElementById(this.containerId).clientWidth;
+      this.height = document.getElementById(this.containerId).clientWidth;
 
-    this.renderer.setSize(this.width, this.height);
-    this.camera.aspect = this.width / this.height;
+      this.renderer.setSize(this.width, this.height);
+      this.camera.aspect = this.width / this.height;
+    } else {
+      this.width = document.getElementById(this.containerId).clientWidth;
+      this.height = document.getElementById(this.containerId).clientHeight;
+
+      this.renderer.setSize(this.width, this.height);
+      this.camera.aspect = this.width / this.height;
+    }
   }
 }

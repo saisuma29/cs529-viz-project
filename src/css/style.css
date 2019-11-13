@@ -52,6 +52,10 @@
     padding: 0px 10px;
 }
 
+#time-input {
+    width: 60px;
+}
+
 /* 3D / 2D views */
 .mainview {
     position: absolute;
@@ -63,9 +67,8 @@
     position: absolute;
     top: 0px;
     margin: 20px;
-    width: 100px;
-    height: 400px;
-    border: 3px solid #333;
+    width: 86px;
+    border:3px solid #333;
     border-radius: 5px;
     z-index: 2;
 }
@@ -77,7 +80,11 @@
 
 #rank-list {
     width: 100%;
-    height: 500px;
+    height: 290px;
+}
+
+#node-input {
+    width: 60px;
 }
 
 /* Canvas styles */
@@ -91,6 +98,16 @@ canvas {
 
 #canvas2d {
     display: block;
+    margin: 0 auto;
+}
+
+nav {
+    float: right;
+}
+
+.nav-pills > a.nav-link.active {
+    /* Bootstrap dark */
+    background-color: #343a40;
 }
 
 /* Medium tablet */

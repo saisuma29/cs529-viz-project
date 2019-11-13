@@ -2,14 +2,14 @@ import * as d3 from 'd3';
 import * as THREE from 'three';
 
 export class Mesh3D {
-  init(layer0, layer1, layer2, layer3) {
+  init(layers) {
     // initialize objects
     this.planeMaterial = this.getMaterial('basic', 'rgb(255, 255, 255)');
 
-    this.plane0 = this.getPlane(this.planeMaterial, 20, 0);
-    this.plane1 = this.getPlane(this.planeMaterial, 20, 2);
-    this.plane2 = this.getPlane(this.planeMaterial, 20, 4);
-    this.plane3 = this.getPlane(this.planeMaterial, 20, 6);
+    this.plane0 = this.getPlane(this.planeMaterial, 10, 0);
+    this.plane1 = this.getPlane(this.planeMaterial, 10, 2);
+    this.plane2 = this.getPlane(this.planeMaterial, 10, 4);
+    this.plane3 = this.getPlane(this.planeMaterial, 10, 6);
 
     this.plane0.name = 'plane-0';
     this.plane1.name = 'plane-1';
@@ -17,14 +17,14 @@ export class Mesh3D {
     this.plane3.name = 'plane-3';
 
     // Set initial geometry from timestamp 0
-    this.update(layer0, layer1, layer2, layer3, 0);
+    this.update(layers, 0);
   }
 
   getPlane(material, size, Z) {
     // var geometry = new THREE.PlaneGeometry(size, size, segments, segments);
     var geometry = new THREE.Geometry();
 
-    var scale_grid = 10;
+    var scale_grid = 20;
     for (var j = 0; j < size; j++) {
       for (var i = 0; i < size; i++) {
         geometry.vertices.push(
@@ -94,7 +94,7 @@ export class Mesh3D {
     return selectedMaterial;
   }
 
-  update(layer0, layer1, layer2, layer3, timestamp) {
+  update(layers, timestamp) {
     // console.log(timestamp);
     // ------------------------------------------
     var planeGeo0 = this.plane0.geometry;
@@ -106,47 +106,47 @@ export class Mesh3D {
     var colorScaleG = d3.scaleSequential(d3.interpolateWarm).domain([0.3, 0]);
 
     // Update the geometry of the mesh
-    for (var i = 0; i < 400; i++) {
+    for (var i = 0; i < 100; i++) {
       // Ordered top to bottom based on view location
-      planeGeo3.vertices[i].y = layer3[i][timestamp] * 50 - 20;   // P
-      planeGeo2.vertices[i].y = layer2[i][timestamp] * 50 + 25;   // G
-      planeGeo1.vertices[i].y = layer1[i][timestamp] * 50 - 95;   // P
-      planeGeo0.vertices[i].y = layer0[i][timestamp] * 50 - 50;   // G
+      planeGeo3.vertices[i].y = layers[3][i][timestamp] * 50 - 20;   // P
+      planeGeo2.vertices[i].y = layers[2][i][timestamp] * 50 + 25;   // G
+      planeGeo1.vertices[i].y = layers[1][i][timestamp] * 50 - 95;   // P
+      planeGeo0.vertices[i].y = layers[0][i][timestamp] * 50 - 50;   // G
     }
 
     // Update the color of faces to average of face edges
     // Layer 3
     for (var i = 0; i < planeGeo3.faces.length; i++) {
-      var a = parseFloat(layer3[planeGeo3.faces[i].a][timestamp]);
-      var b = parseFloat(layer3[planeGeo3.faces[i].b][timestamp]);
-      var c = parseFloat(layer3[planeGeo3.faces[i].c][timestamp]);
+      var a = parseFloat(layers[3][planeGeo3.faces[i].a][timestamp]);
+      var b = parseFloat(layers[3][planeGeo3.faces[i].b][timestamp]);
+      var c = parseFloat(layers[3][planeGeo3.faces[i].c][timestamp]);
       var ave = (a + b + c) / 3;
       var color = colorScaleP(ave);
       planeGeo3.faces[i].color.set(color);
     }
     // Layer 2
     for (var i = 0; i < planeGeo2.faces.length; i++) {
-      var a = parseFloat(layer2[planeGeo2.faces[i].a][timestamp]);
-      var b = parseFloat(layer2[planeGeo2.faces[i].b][timestamp]);
-      var c = parseFloat(layer2[planeGeo2.faces[i].c][timestamp]);
+      var a = parseFloat(layers[2][planeGeo2.faces[i].a][timestamp]);
+      var b = parseFloat(layers[2][planeGeo2.faces[i].b][timestamp]);
+      var c = parseFloat(layers[2][planeGeo2.faces[i].c][timestamp]);
       var ave = (a + b + c) / 3;
       var color = colorScaleG(ave);
       planeGeo2.faces[i].color.set(color);
     }
     // Layer 1
     for (var i = 0; i < planeGeo1.faces.length; i++) {
-      var a = parseFloat(layer1[planeGeo1.faces[i].a][timestamp]);
-      var b = parseFloat(layer1[planeGeo1.faces[i].b][timestamp]);
-      var c = parseFloat(layer1[planeGeo1.faces[i].c][timestamp]);
+      var a = parseFloat(layers[1][planeGeo1.faces[i].a][timestamp]);
+      var b = parseFloat(layers[1][planeGeo1.faces[i].b][timestamp]);
+      var c = parseFloat(layers[1][planeGeo1.faces[i].c][timestamp]);
       var ave = (a + b + c) / 3;
       var color = colorScaleP(ave);
       planeGeo1.faces[i].color.set(color);
     }
     // Layer 0
     for (var i = 0; i < planeGeo0.faces.length; i++) {
-      var a = parseFloat(layer0[planeGeo0.faces[i].a][timestamp]);
-      var b = parseFloat(layer0[planeGeo0.faces[i].b][timestamp]);
-      var c = parseFloat(layer0[planeGeo0.faces[i].c][timestamp]);
+      var a = parseFloat(layers[0][planeGeo0.faces[i].a][timestamp]);
+      var b = parseFloat(layers[0][planeGeo0.faces[i].b][timestamp]);
+      var c = parseFloat(layers[0][planeGeo0.faces[i].c][timestamp]);
       var ave = (a + b + c) / 3;
       var color = colorScaleG(ave);
       planeGeo0.faces[i].color.set(color);

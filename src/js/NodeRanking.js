@@ -1,16 +1,21 @@
 import * as d3 from "d3";
 
 export class NodeRanking {
-  init(layer0, layer1, layer2, layer3) {
-    var content0 = [];
+  init(layers) {
+    this.currentLayer = 1;
+    var values = [];
 
     var timestamp = 0;
 
-    for (var row = 0; row < 400; row++) {
-      content0.push(1.8 - layer1[row][timestamp]);
+    if (this.currentLayer == 1 || this.currentLayer == 3) {
+      for (var row = 0; row < 100; row++) {
+        values.push(1.9 - layers[this.currentLayer][row][timestamp]);
+      }
+    } else {
+      for (var row = 0; row < 100; row++) {
+        values.push(layers[this.currentLayer][row][timestamp]);
+      }
     }
-
-    var values = content0;
     // --------------------------------------------
     var test = values;
     var test_with_index = [];
@@ -29,7 +34,7 @@ export class NodeRanking {
     }
 
     var label_nodes = [];
-    for (var i = 399; i > -1; i--) {
+    for (var i = 99; i > -1; i--) {
       label_nodes.push(indexes[i]);
     }
     // --------------------------------------------
@@ -37,16 +42,11 @@ export class NodeRanking {
     var sorted = arr.slice().sort(function(a, b) {
       return b - a;
     });
-    // var ranks_id = arr.slice().map(function(v){ return sorted.indexOf(v)+1 });
 
-    var dataIndex = 1;
-    var xBuffer = 0;
-    var lineLength = 400;
-
-    var colorScale = d3.scaleSequential(d3.interpolateRainbow).domain([0, 399]);
+    var colorScale = d3.scaleSequential(d3.interpolateRainbow).domain([0, 99]);
 
     // console.log(sorted)
-    console.log(label_nodes);
+    // console.log(label_nodes);
     // console.log(ranks_id)
     //create main svg element
     this.svgDoc = d3
@@ -77,11 +77,13 @@ export class NodeRanking {
       .attr("stroke", function(d, i) {
         return colorScale(i);
       })
-      .attr("x", 50)
+      .attr("x", 0)
       .attr("y", function(d, i) {
-        // console.log(ranks_id[i]-1)
-
         return 30 * i;
+      })
+      .on("click", function(d, i) {
+        console.log(i);
+        console.log(d);
       });
     this.svgDoc
       .append("g")
@@ -89,25 +91,30 @@ export class NodeRanking {
       .data(sorted)
       .enter()
       .append("text")
-      .attr("dx", 80)
+      .attr("dx", 10)
       .attr("dy", function(d, i) {
         return 15 + 30 * i;
       })
       .attr("id", "texts")
       .text(function(d, i) {
-        return i;
+        return `Node ${i}`;
       })
       .attr("fill", "white");
   }
 
-  update(layer0, layer1, layer2, layer3, timestamp) {
-    var content0 = [];
+  update(layers, timestamp) {
+    var values = [];
 
-    for (var row = 0; row < 400; row++) {
-      content0.push(1.9 - layer1[row][timestamp]);
+    
+    if (this.currentLayer == 1 || this.currentLayer == 3) {
+      for (var row = 0; row < 100; row++) {
+        values.push(1.9 - layers[this.currentLayer][row][timestamp]);
+      }
+    } else {
+      for (var row = 0; row < 100; row++) {
+        values.push(layers[this.currentLayer][row][timestamp]);
+      }
     }
-
-    var values = content0;
     // --------------------------------------------
     var test = values;
     var test_with_index = [];
@@ -126,7 +133,7 @@ export class NodeRanking {
     }
 
     var label_nodes = [];
-    for (var i = 399; i > -1; i--) {
+    for (var i = 99; i > -1; i--) {
       label_nodes.push(indexes[i]);
     }
     var arr = values;
@@ -153,7 +160,7 @@ export class NodeRanking {
       .transition()
       .duration(0)
       .attr("y", function(d, i) {
-        for (var j = 0; j < 400; j++) {
+        for (var j = 0; j < 100; j++) {
           if (i == parseInt(label_nodes[j])) {
             var id_found = j;
           }
@@ -161,7 +168,7 @@ export class NodeRanking {
         return 30 * id_found; //label_nodes[i]
       })
       .attr("width", function(d, i) {
-        for (var j = 0; j < 400; j++) {
+        for (var j = 0; j < 100; j++) {
           if (i == parseInt(label_nodes[j])) {
             var id_found = j;
           }
@@ -176,13 +183,13 @@ export class NodeRanking {
       .data(sorted)
       .enter()
       .append("text")
-      .attr("dx", 80)
+      .attr("dx", 10)
       .attr("dy", function(d, i) {
         return 15 + 30 * i;
       })
       .attr("id", "texts")
       .text(function(d, i) {
-        return label_nodes[i];
+        return `Node ${label_nodes[i]}`;
       });
   }
 }
