@@ -7,201 +7,132 @@ d3.queue()
     .await(ready)
 
 function init(layer0, layer1, layer2, layer3) {
-        var content0 = [];
 
-        var timestamp = 0
-
-        for (var row = 0; row < 400; row++) {
-            content0.push(1.8 - layer1[row][timestamp]);
-        }
-
-        values = content0;
-        // --------------------------------------------
-        var test = values;
-        var test_with_index = [];
-        for (var i in test) {
-            test_with_index.push([test[i], i]);
-        }
-        test_with_index.sort(function(left, right) {
-          return left[0] < right[0] ? -1 : 1;
-        });
-        var indexes = [];
-        test = [];
+    // color of bars
+    var color = "steelblue";
     
-        for (var j in test_with_index) {
-            test.push(test_with_index[j][0]);
-            indexes.push(test_with_index[j][1]);
-        }
+    // get data of a specific time stamp
+    var content0 = [];
+    var timestamp = 100
+    for (var row = 0; row < 100; row++) {
+        content0.push(1.8 - layer1[row][timestamp]);
+    }
+    var values = content0;
+    console.log(values)
 
-        var label_nodes = []
-        for (var i = 399; i > -1; i--) {
-            label_nodes.push(indexes[i]);
-        }
-        // --------------------------------------------
-        var arr = values
-        var sorted = arr.slice().sort(function(a,b){return b-a})
-        // var ranks_id = arr.slice().map(function(v){ return sorted.indexOf(v)+1 });
+    // A formatter for counts.
+    var formatCount = d3.format(",.00f");
+    
+    var margin = {top: 40, right: 60, bottom: 60, left: 60},
+        width = 960 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+    
 
-        var colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
-        '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
-        '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
-        '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
-        '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', 
-        '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
-        '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680', 
-        '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
-        '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
-        '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
-        var dataIndex=1;
-        var xBuffer=50;
-        var yBuffer=150;
-        var lineLength=400;
-            
-        // console.log(sorted)
-        console.log(label_nodes)
-        // console.log(ranks_id)
-        //create main svg element
-        var svgDoc = d3.select("body").append("svg")
+    var max = d3.max(values);
+    var min = d3.min(values);
 
-        // svgDoc.append("text")
-        //         .attr("x",xBuffer+(lineLength/2))
-        //         .attr("y",50)
-        //         .text("dataset"+dataIndex);
-            
-            svgDoc.append("g").selectAll("rect")
-                .data(sorted)
-                .enter()
-                .append("rect")
-                .attr("width",function(d,i){
-                    return values[i]  * 1000
-                    // return sorted[i]  * 2000
+    var ScaleWidth = d3.scaleLinear()
+          .domain([min, max])
+          .range([0, width]);
 
-                })
-                .attr("height",20)
-                .attr("fill", function(d,i){
-                    return colorArray[i%50]
-                }
-                )
-                .attr("fill-opacity",0.8)
-                .attr("stroke", function(d,i){
-                    return colorArray[i%50]
-                })
-                .attr("x",50)
-                .attr("y", function(d,i){       
-                    // console.log(ranks_id[i]-1)   
-                              
-                   return yBuffer + 30 * i
-                })
-            svgDoc.append("g").selectAll("text_bars")
-                .data(sorted)
-                .enter()
-                .append("text")
-                .attr("dx", 80)
-                .attr("dy", function(d,i){
-                return yBuffer +15 + 30 * i
-                })
-                .attr("id","texts")
-                .text(function(d,i){
-                return i})
+    // Generate a histogram using twenty uniformly-spaced bins.
+    var data = d3.histogram()
+        .thresholds(ScaleWidth.ticks(20))
+        (values);
 
-                // return label_nodes[i]})
+    var yMax = d3.max(data, function(d){
+        return d.length
+    });
 
+    var yMin = d3.min(data, function(d){
+        return d.length
+    });
 
-            //button to swap over datasets
-            d3.select("body").append("button")
-                .text("change data")
-                
-                .on("click",function(){
-                    
-                    //select new data
-                    if (dataIndex==1) {
-                        dataIndex=2;
-                    } else   {
-                        dataIndex=1;
+    var colorScale = d3.scaleLinear()
+                .domain([yMin, yMax])
+                .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
+    
+    var ScaleHeight = d3.scaleLinear()
+        .domain([0, yMax])
+        .range([height, 0]);
 
-                    }
-                    var content0 = [];
-
-                    timestamp += 6 
-
-                    console.log(timestamp)
-                    for (var row = 0; row < 400; row++) {
-                        content0.push(1.9-layer1[row][timestamp]);
-                    }
-            
-                    values = content0;
-                    // --------------------------------------------
-                    var test = values;
-                    var test_with_index = [];
-                    for (var i in test) {
-                        test_with_index.push([test[i], i]);
-                    }
-                    test_with_index.sort(function(left, right) {
-                      return left[0] < right[0] ? -1 : 1;
-                    });
-                    var indexes = [];
-                    test = [];
-                
-                    for (var j in test_with_index) {
-                        test.push(test_with_index[j][0]);
-                        indexes.push(test_with_index[j][1]);
-                    }
-            
-                    var label_nodes = []
-                    for (var i = 399; i > -1; i--) {
-                        label_nodes.push(indexes[i]);
-                    }
-                    var arr = values
-                    var sorted = arr.slice().sort(function(a,b){return b-a})
-                    // var ranks_id = arr.slice().map(function(v){ return sorted.indexOf(v)+1 });
-
-                    // --------------------------------------------
-
-                    //rejoin data
-                    var rect = svgDoc.select("g").selectAll("rect")
-                        .data(sorted);
-                    rect.exit().remove();//remove unneeded circles
-                    rect.enter().append("rect")
-                        .attr("x",50)
-                         .attr("height",20)
-                    //update all circles to new positions
-                    rect.transition()
-                        .duration(250)
-                        .attr("y", function(d,i){         
-                            for (var j = 0; j < 400; j++) {
-                                if ( i == parseInt(label_nodes[j])){
-                                var id_found = j;
-                                }
-
-                            }              
-                            return yBuffer + 30 * id_found//label_nodes[i]
-                         })
-                         .attr("width",function(d,i){
-                            for (var j = 0; j < 400; j++) {
-                                if ( i == parseInt(label_nodes[j])){
-                                var id_found = j;
-                                }
-
-                            }    
-                            return sorted[id_found]  * 1000
-                        })
-
-
-                    d3.selectAll("#texts").remove()
-                    svgDoc.append("g").selectAll("text_bars")
-                        .data(sorted)
-                        .enter()
-                        .append("text")
-                        .attr("dx", 80)
-                        .attr("dy", function(d,i){
-                        return yBuffer +15 + 30 *i
-                        })
-                        .attr("id","texts")
-                        .text(function(d,i){return label_nodes[i]})
-
-                    d3.select("text").text("dataset"+dataIndex);
-
-                });//end click function
+    var xAxis = d3.axisBottom()
+        .scale(ScaleWidth)
+    
+    var svg = d3.select("body").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    
+    var bar = svg.selectAll(".bar")
+        .data(data)
+      .enter().append("g")
+        .attr("class", "bar")
+        .attr("transform", function(d) { return "translate(" + ScaleWidth(d.x0) + "," + ScaleHeight(d.length) + ")"; });
+    
+    bar.append("rect")
+        .attr("x", 1)
+        .attr("width", (ScaleWidth(data[0].x1 - data[0].x0) -ScaleWidth(0) - 1 ))
+        .attr("height", function(d) { 
+            return height - ScaleHeight(d.length); 
+        })
+        .attr("fill", function(d) { return colorScale(d.length) });
+    
+    bar.append("text")
+        .attr("dy", ".75em")
+        .attr("y", -12)
+        .attr("x", 30)
+        .attr("text-anchor", "middle")
+        .text(function(d) { return formatCount(d.length); });
+    
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+    
+    /*
+    * Adding refresh method to reload new data
+    */
+    function refresh(values){
+      // var values = d3.range(1000).map(d3.random.normal(20, 5));
+      var data = d3.histogram()
+        .thresholds(x.ticks(20))
+        (values);
+    
+      // Reset y domain using new data
+      var yMax = d3.max(data, function(d){
+          return d.length
+        });
+      var yMin = d3.min(data, function(d){
+          return d.length
+        });
+      y.domain([0, yMax]);
+      var colorScale = d3.scale.linear()
+                  .domain([yMin, yMax])
+                  .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
+    
+      var bar = svg.selectAll(".bar").data(data);
+    
+      // Remove object with data
+      bar.exit().remove();
+    
+      bar.transition()
+        .duration(1000)
+        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + ScaleHeight(d.length) + ")"; });
+    
+      bar.select("rect")
+          .transition()
+          .duration(1000)
+          .attr("height", function(d) { return height - ScaleHeight(d.length); })
+          .attr("fill", function(d) { return colorScale(d.length) });
+    
+      bar.select("text")
+          .transition()
+          .duration(1000)
+          .text(function(d) { return formatCount(d.length); });
+    
+    }
 }
 
 function ready(error, layer0, layer1, layer2, layer3) {
