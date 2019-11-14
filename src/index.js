@@ -13,6 +13,7 @@ import { Canvas2D } from "./js/Canvas2D";
 import { Mesh3D } from "./js/Mesh3D";
 import { Heatmap } from "./js/Heatmap";
 import { NodeRanking } from "./js/NodeRanking";
+import { Histogram } from "./js/Histogram";
 import { ToggleButtons } from "./js/ToggleButtons";
 import { Play } from "./js/Play";
 
@@ -28,6 +29,7 @@ const mesh3D = new Mesh3D();
 const heatmap = new Heatmap();
 const toggleButtons = new ToggleButtons();
 const nodeRanking = new NodeRanking();
+const histogram = new Histogram();
 const play = new Play();
 var layers;
 
@@ -55,9 +57,12 @@ function run() {
 
   // Create 2D heatmap
   heatmap.init(layers, canvas2D.divId);
-  // canvas2D.addToScene(heatmap.mesh);
 
+  // Create node ranking table
   nodeRanking.init(layers);
+
+  // Create voltage histogram
+  histogram.init(layers, "histogram", "frequency-div");
 
   // Enable 3D / 2D toggle buttons
   toggleButtons.init(canvas3D, canvas2D);
@@ -93,11 +98,17 @@ function run() {
     // Update shapes to current time
     let t = parseInt(play.timeInput.value) % play.timeLength;
     play.slider.value = t;
-    play.timeInput.value = t
+    play.timeInput.value = t;
 
     for (let shape of [mesh3D, heatmap, nodeRanking]) {
       shape.update(layers, t);
     }
+  });
+
+  histogram.updateButton.addEventListener("click", () => {
+    let currentLayer = nodeRanking.currentLayer;
+    let t = play.slider.value;
+    histogram.update(layers[currentLayer], currentLayer, t);
   });
 
   // Begin animation loop

@@ -9,11 +9,11 @@ export class NodeRanking {
 
     if (this.currentLayer == 1 || this.currentLayer == 3) {
       for (var row = 0; row < 100; row++) {
-        values.push(1.9 - layers[this.currentLayer][row][timestamp]);
+        values.push(Math.abs(1.8 - layers[this.currentLayer][row][timestamp]));
       }
     } else {
       for (var row = 0; row < 100; row++) {
-        values.push(layers[this.currentLayer][row][timestamp]);
+        values.push(Math.abs(layers[this.currentLayer][row][timestamp]));
       }
     }
     // --------------------------------------------
@@ -108,11 +108,11 @@ export class NodeRanking {
     
     if (this.currentLayer == 1 || this.currentLayer == 3) {
       for (var row = 0; row < 100; row++) {
-        values.push(1.9 - layers[this.currentLayer][row][timestamp]);
+        values.push(Math.abs(1.8 - layers[this.currentLayer][row][timestamp]));
       }
     } else {
       for (var row = 0; row < 100; row++) {
-        values.push(layers[this.currentLayer][row][timestamp]);
+        values.push(Math.abs(layers[this.currentLayer][row][timestamp]));
       }
     }
     // --------------------------------------------
