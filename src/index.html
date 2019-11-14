@@ -8,6 +8,7 @@
     <div class="row">
       <!-- Main view -->
       <div class="col-lg-8">
+        <!-- App -->
         <div id="app">
           <div id="loading">Loading data...</div>
 
@@ -95,6 +96,21 @@
             <div id="heatmap-4"></div>
           </div>
         </div>
+
+        <!-- Voltage graph -->
+
+        <h5>
+          Voltage History - Node
+          <input
+            type="number"
+            id="node-input"
+            class="form-control form-control-sm text-light bg-dark border-dark"
+            min="0"
+            step="1"
+            value="0"
+          />
+        </h5>
+        <div id="voltage-div" class="my-4">HELLO</div>
       </div>
 
       <!-- Sidebar info -->
@@ -184,25 +200,18 @@
               <hr class="border-dark" />
 
               <h5>
-                Voltage History - Node
-                <input
-                  type="number"
-                  id="node-input"
-                  class="form-control form-control-sm text-light bg-dark border-dark"
-                  min="0"
-                  step="1"
-                  value="0"
-                />
+                Voltage Drop Frequency
+                <button id="frequency-update" class="btn btn-sm btn-dark">Update</button>
               </h5>
 
-              <!-- Voltage graph -->
-              <div id="voltage-div" class="my-4"></div>
+              <!-- Frequency Histogram -->
+              <div id="frequency-div" class="my-4"></div>
             </div>
 
             <!-- System Content -->
             <div class="tab-pane fade" id="nav-system" role="tabpanel">
-              <h5>WASD wasd</h5>
-              <p>wasd wasd wasd waswasdw</p>
+              <h5>System Information</h5>
+              <p>To be updated...</p>
             </div>
           </div>
         </div>

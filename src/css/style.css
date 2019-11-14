@@ -7,7 +7,7 @@
 /* Application */
 #app {
     position: relative;
-    height: 100vh;
+    height: 80vh;
 }
 
 /* Loading message */
@@ -54,6 +54,10 @@
 
 #time-input {
     width: 60px;
+}
+
+#node-input {
+    display: inline;
 }
 
 /* 3D / 2D views */
