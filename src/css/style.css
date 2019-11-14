@@ -53,11 +53,20 @@
 }
 
 #time-input {
-    width: 60px;
+    width: 70px;
 }
 
 #node-input {
     display: inline;
+}
+
+#voltage-div-header {
+    height: 5vh;
+    padding: 10px;
+}
+
+#voltage-div {
+    height: 15vh;
 }
 
 /* 3D / 2D views */

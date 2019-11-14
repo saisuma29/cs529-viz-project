@@ -12,7 +12,7 @@ export class Histogram {
 
     // get data of a specific time stamp
     var values = [];
-    var timestamp = 10;
+    var timestamp = 0;
     for (var row = 0; row < 100; row++) {
       values.push(1.8 - layers[1][row][timestamp]);
     }
@@ -117,7 +117,7 @@ export class Histogram {
       .call(xAxis);
   }
 
-  update(layer, currentLayer, timestamp) {
+  update(layers, currentLayer, timestamp) {
     // color of bars
     var color = "steelblue";
     var ticks = 20;
@@ -126,11 +126,11 @@ export class Histogram {
     var values = [];
     if (currentLayer == 1 || currentLayer == 3) {
       for (var row = 0; row < 100; row++) {
-        values.push(Math.abs(1.8 - layer[row][timestamp]));
+        values.push(Math.abs(1.8 - layers[currentLayer][row][timestamp]));
       }
     } else {
       for (var row = 0; row < 100; row++) {
-        values.push(Math.abs(layer[row][timestamp]));
+        values.push(Math.abs(layers[currentLayer][row][timestamp]));
       }
     }
 
