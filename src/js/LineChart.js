@@ -43,7 +43,7 @@ export class LineChart {
     // Y domain depending on layer
     if (currentLayer == 1 || currentLayer == 3) {
       var yDomain = [1.5, 1.8];
-      var color = 'green';
+      var color = 'lightgreen';
     } else {
       var yDomain = [-0.1, 0.2];
       var color = 'yellow';
@@ -55,6 +55,7 @@ export class LineChart {
       .domain(yDomain) // input
       .range([this.height, 0]); // output
 
+    // Clear out SVG
     this.svg.html(null);
 
     // Call the x axis in a group tag
@@ -76,7 +77,7 @@ export class LineChart {
       .datum(values)
       .attr('fill', 'none')
       .attr('stroke', color)
-      .attr('stroke-width', 1.0)
+      .attr('stroke-width', 2)
       .attr(
         'd',
         d3
