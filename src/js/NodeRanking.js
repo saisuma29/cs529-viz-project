@@ -45,19 +45,11 @@ export class NodeRanking {
 
     var colorScale = d3.scaleSequential(d3.interpolateRainbow).domain([0, 99]);
 
-    // console.log(sorted)
-    // console.log(label_nodes);
-    // console.log(ranks_id)
     //create main svg element
     this.svgDoc = d3
       .select("#rank-list")
       .append("svg")
       .style("height", "100%");
-
-    // svgDoc.append("text")
-    //         .attr("x",xBuffer+(lineLength/2))
-    //         .attr("y",50)
-    //         .text("dataset"+dataIndex);
 
     this.svgDoc
       .append("g")
@@ -149,13 +141,13 @@ export class NodeRanking {
       .select("g")
       .selectAll("rect")
       .data(sorted);
-    rect.exit().remove(); //remove unneeded circles
+    rect.exit().remove(); //remove unneeded bars
     rect
       .enter()
       .append("rect")
       .attr("x", 50)
       .attr("height", 20);
-    //update all circles to new positions
+    //update all bars to new positions
     rect
       .transition()
       .duration(0)

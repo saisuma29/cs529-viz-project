@@ -10,7 +10,7 @@ export class Canvas2D {
     this.height = document.getElementById(this.containerId).clientWidth * 4;
     this.svg = d3
       .select(`#${containerId}`)
-      .append("svg:svg")
+      .append("svg")
       .attr("id", this.divId)
       .attr("width", this.width)
       .attr("height", this.height);

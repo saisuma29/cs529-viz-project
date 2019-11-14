@@ -97,20 +97,23 @@
           </div>
         </div>
 
-        <!-- Voltage graph -->
+        <!-- Voltage Info -->
+        <div id="voltage-div-header">
+          <h5>
+            Node History :
+            <input
+              type="number"
+              id="node-input"
+              class="form-control form-control-sm text-light bg-dark border-dark"
+              min="0"
+              step="1"
+              value="0"
+            />
+          </h5>
+        </div>
 
-        <h5>
-          Voltage History - Node
-          <input
-            type="number"
-            id="node-input"
-            class="form-control form-control-sm text-light bg-dark border-dark"
-            min="0"
-            step="1"
-            value="0"
-          />
-        </h5>
-        <div id="voltage-div" class="my-4">HELLO</div>
+        <!-- Voltage graph -->
+        <div id="voltage-div"></div>
       </div>
 
       <!-- Sidebar info -->
@@ -201,7 +204,9 @@
 
               <h5>
                 Voltage Drop Frequency
-                <button id="frequency-update" class="btn btn-sm btn-dark">Update</button>
+                <button id="frequency-update" class="btn btn-sm btn-dark ml-2">
+                  Update
+                </button>
               </h5>
 
               <!-- Frequency Histogram -->

@@ -1,35 +1,37 @@
 // Bootstrap
-import "bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 // D3
-import * as d3 from "d3";
+import * as d3 from 'd3';
 
-import "./css/style.css";
+import './css/style.css';
 
 // Custom classes: Canvas, Square, Plane
-import { Canvas3D } from "./js/Canvas3D";
-import { Canvas2D } from "./js/Canvas2D";
-import { Mesh3D } from "./js/Mesh3D";
-import { Heatmap } from "./js/Heatmap";
-import { NodeRanking } from "./js/NodeRanking";
-import { Histogram } from "./js/Histogram";
-import { ToggleButtons } from "./js/ToggleButtons";
-import { Play } from "./js/Play";
+import { Canvas3D } from './js/Canvas3D';
+import { Canvas2D } from './js/Canvas2D';
+import { Mesh3D } from './js/Mesh3D';
+import { Heatmap } from './js/Heatmap';
+import { NodeRanking } from './js/NodeRanking';
+import { Histogram } from './js/Histogram';
+import { LineChart } from './js/LineChart';
+import { ToggleButtons } from './js/ToggleButtons';
+import { Play } from './js/Play';
 
 // CSV data
-import csv0 from "./data/IBM_layer0_nodes_volt_js.csv";
-import csv1 from "./data/IBM_layer1_nodes_volt_js.csv";
-import csv2 from "./data/IBM_layer2_nodes_volt_js.csv";
-import csv3 from "./data/IBM_layer3_nodes_volt_js.csv";
+import csv0 from './data/IBM_layer0_nodes_volt_js.csv';
+import csv1 from './data/IBM_layer1_nodes_volt_js.csv';
+import csv2 from './data/IBM_layer2_nodes_volt_js.csv';
+import csv3 from './data/IBM_layer3_nodes_volt_js.csv';
 
-const canvas3D = new Canvas3D("canvas3d", "div3d", false);
-const canvas2D = new Canvas2D("canvas2d", "div2d", true);
+const canvas3D = new Canvas3D('canvas3d', 'div3d', false);
+const canvas2D = new Canvas2D('canvas2d', 'div2d', true);
 const mesh3D = new Mesh3D();
 const heatmap = new Heatmap();
 const toggleButtons = new ToggleButtons();
 const nodeRanking = new NodeRanking();
 const histogram = new Histogram();
+const lineChart = new LineChart();
 const play = new Play();
 var layers;
 
@@ -46,7 +48,7 @@ Promise.all([d3.csv(csv0), d3.csv(csv1), d3.csv(csv2), d3.csv(csv3)]).then(
 
 function run() {
   // Remove loading message
-  document.getElementById("loading").remove();
+  document.getElementById('loading').remove();
 
   // Create 3D mesh
   mesh3D.init(layers);
@@ -61,8 +63,11 @@ function run() {
   // Create node ranking table
   nodeRanking.init(layers);
 
-  // Create voltage histogram
-  histogram.init(layers, "histogram", "frequency-div");
+  // Create histogram
+  histogram.init(layers, 'histogram', 'frequency-div');
+
+  // Create line chart
+  lineChart.init(layers, 'voltage-linechart', 'voltage-div');
 
   // Enable 3D / 2D toggle buttons
   toggleButtons.init(canvas3D, canvas2D);
@@ -77,38 +82,58 @@ function run() {
   };
 
   // Layer toggles for rank list
-  const layerRankButtons = document.getElementsByClassName("layer-rank-toggle");
+  const layerRankButtons = document.getElementsByClassName('layer-rank-toggle');
   for (let button of layerRankButtons) {
     // Set on click listener for each toggle
-    button.addEventListener("click", () => {
+    button.addEventListener('click', () => {
       // Set layer for node ranking table
-      let index = parseInt(button.dataset.layer);
-      nodeRanking.currentLayer = index;
+      let currentLayer = parseInt(button.dataset.layer);
+      nodeRanking.currentLayer = currentLayer;
 
       // Update to reflect change
       nodeRanking.update(layers, play.slider.value);
+      histogram.update(layers, currentLayer, play.slider.value);
+      lineChart.update(layers, currentLayer, 56);
     });
   }
 
   // Time input
-  play.timeInput.addEventListener("input", () => {
+  play.timeInput.addEventListener('input', () => {
     // TODO will break app if invalid input
     play.pauseTimelapse();
 
-    // Update shapes to current time
-    let t = parseInt(play.timeInput.value) % play.timeLength;
+    // Update shapes to current time (zero if null input)
+    let t =
+      play.timeInput.value != ''
+        ? parseInt(play.timeInput.value) % play.timeLength
+        : 0;
+
     play.slider.value = t;
     play.timeInput.value = t;
 
+    // Update graphs
     for (let shape of [mesh3D, heatmap, nodeRanking]) {
       shape.update(layers, t);
     }
   });
 
-  histogram.updateButton.addEventListener("click", () => {
+  // Voltage Histogram
+  histogram.updateButton.addEventListener('click', () => {
     let currentLayer = nodeRanking.currentLayer;
     let t = play.slider.value;
-    histogram.update(layers[currentLayer], currentLayer, t);
+    histogram.update(layers, currentLayer, t);
+  });
+
+  lineChart.nodeInput.addEventListener('input', () => {
+    // Update shapes to current time (zero if null input)
+    let node =
+      lineChart.nodeInput.value != ''
+        ? parseInt(lineChart.nodeInput.value) %
+          lineChart.nodeInput.getAttribute('max')
+        : 0;
+
+    lineChart.nodeInput.value = node;
+    lineChart.update(layers, nodeRanking.currentLayer, node);
   });
 
   // Begin animation loop
