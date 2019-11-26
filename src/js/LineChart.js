@@ -3,22 +3,18 @@ import * as d3 from 'd3';
 export class LineChart {
   init(layers, divId, containerId) {
     this.divId = divId;
-    this.containerId = containerId;
+    this.containerDiv = document.getElementById(containerId);
     this.nodeInput = document.getElementById('node-input');
     this.nodeInput.setAttribute('max', layers[0].length);
 
     this.margin = { top: 20, right: 50, bottom: 50, left: 50 };
     this.width =
-      document.getElementById(containerId).clientWidth -
-      this.margin.left -
-      this.margin.right;
+      this.containerDiv.clientWidth - this.margin.left - this.margin.right;
     this.height =
-      document.getElementById(containerId).clientHeight -
-      this.margin.top -
-      this.margin.bottom;
+      this.containerDiv.clientHeight / 2 - this.margin.top - this.margin.bottom;
 
-    this.svg = d3
-      .select(`#${containerId}`)
+    this.svgP = d3
+      .select(this.containerDiv)
       .append('svg')
       .attr('width', this.width + this.margin.left + this.margin.right)
       .attr('height', this.height + this.margin.top + this.margin.bottom)
@@ -28,55 +24,75 @@ export class LineChart {
         'translate(' + this.margin.left + ',' + this.margin.top + ')'
       );
 
-    this.update(layers, 1, 56);
+    this.svgG = d3
+      .select(this.containerDiv)
+      .append('svg')
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom)
+      .append('g')
+      .attr(
+        'transform',
+        'translate(' + this.margin.left + ',' + this.margin.top + ')'
+      );
+
+    this.update(layers, 0);
   }
 
-  update(layers, currentLayer, node) {
-    var values = Object.values(layers[currentLayer][node]);
+  update(layers, node) {
+    this.svgP
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom);
+    let valuesP = Object.values(layers[3][node]);
+    let valuesG = Object.values(layers[2][node]);
 
     // X scale
-    var xScale = d3
+    let xScale = d3
       .scaleLinear()
       .domain([0, 1000]) // input
       .range([0, this.width]); // output
 
-    // Y domain depending on layer
-    if (currentLayer == 1 || currentLayer == 3) {
-      var yDomain = [1.5, 1.8];
-      var color = 'green';
-    } else {
-      var yDomain = [-0.1, 0.2];
-      var color = 'yellow';
-    }
+    let yDomainP = [1.5, 1.8];
+    let colorP = 'violet';
+
+    let yDomainG = [-0.1, 0.2];
+    let colorG = 'yellow';
 
     // Y scale
-    var yScale = d3
+    let yScaleP = d3
       .scaleLinear()
-      .domain(yDomain) // input
+      .domain(yDomainP) // input
       .range([this.height, 0]); // output
 
-    this.svg.html(null);
+    let yScaleG = d3
+      .scaleLinear()
+      .domain(yDomainG) // input
+      .range([this.height, 0]); // output
 
+    // Clear out SVG
+    this.svgP.html(null);
+    this.svgG.html(null);
+
+    // Power
     // Call the x axis in a group tag
-    this.svg
+    this.svgP
       .append('g')
       .attr('class', 'x axis')
       .attr('transform', 'translate(0,' + this.height + ')')
       .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
 
     // Call the y axis in a group tag
-    this.svg
+    this.svgP
       .append('g')
       .attr('class', 'y axis')
-      .call(d3.axisLeft(yScale).ticks(5)); // Create an axis component with d3.axisLeft
+      .call(d3.axisLeft(yScaleP).ticks(4)); // Create an axis component with d3.axisLeft
 
     // Add line
-    this.svg
+    this.svgP
       .append('path')
-      .datum(values)
+      .datum(valuesP)
       .attr('fill', 'none')
-      .attr('stroke', color)
-      .attr('stroke-width', 1.0)
+      .attr('stroke', colorP)
+      .attr('stroke-width', 2)
       .attr(
         'd',
         d3
@@ -85,8 +101,56 @@ export class LineChart {
             return xScale(i);
           })
           .y(function(d, i) {
-            return yScale(values[i]);
+            return yScaleP(d);
           })
       );
+
+    // Ground
+    // Call the x axis in a group tag
+    this.svgG
+      .append('g')
+      .attr('class', 'x axis')
+      .attr('transform', 'translate(0,' + this.height + ')')
+      .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
+
+    // Call the y axis in a group tag
+    this.svgG
+      .append('g')
+      .attr('class', 'y axis')
+      .call(d3.axisLeft(yScaleG).ticks(4)); // Create an axis component with d3.axisLeft
+
+    // Add line
+    this.svgG
+      .append('path')
+      .datum(valuesG)
+      .attr('fill', 'none')
+      .attr('stroke', colorG)
+      .attr('stroke-width', 2)
+      .attr(
+        'd',
+        d3
+          .line()
+          .x(function(d, i) {
+            return xScale(i);
+          })
+          .y(function(d, i) {
+            return yScaleG(d);
+          })
+      );
+  }
+
+  resize() {
+    this.width =
+      this.containerDiv.clientWidth - this.margin.left - this.margin.right;
+    this.height =
+      this.containerDiv.clientHeight / 2 - this.margin.top - this.margin.bottom;
+
+    this.svgP
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom);
+
+    this.svgG
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom);
   }
 }

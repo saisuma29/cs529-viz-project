@@ -1,39 +1,77 @@
 /* Bootstrap rows and columns */
-.row, .col-lg-8, .col-lg-4 {
+.row, .col-lg-8, .col-lg-4, .col-xl-6 {
     margin: 0;
     padding: 0;
-}
-
-/* Application */
-#app {
-    position: relative;
-    height: 80vh;
 }
 
 /* Loading message */
 #loading {
     position: absolute;
-    top: 20px;
-    left: 10px;
+    padding: 20px;
     width: 100%;
     text-align: center;
-    color: lightgray;
     z-index: 2;
+}
+
+/* Application */
+#app {
+    position: relative;
+    height: 50vh;
+}
+
+/* 3D / 2D views */
+.mainview {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+}
+
+.subview {
+    position: absolute;
+    width: 100px;
+    z-index: 2;
+}
+
+.heatmap-div {
+    display: inline-block;
+}
+
+/* Canvas styles */
+#div3d {
+    display: block;
+}
+
+#div2d {
+    display: block;
+    height: 100%;
 }
 
 /* 3D / 2D toggle button */
 #toggle-view {
     position: absolute;
+    right: 0px;
     padding: 20px;
-    width: 100%;
-    text-align: right;
+    z-index: 2;
+}
+
+/* Legend */
+#legend-div {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    padding: 20px;
+    width: 100px;
+    height: 375px;
     z-index: 2;
 }
 
 /* Timeline */
 #time-div {
-    position: absolute;
-    bottom: 0px;
+    /* position: absolute;
+    bottom: 0px; */
     background-color: #181818;
     padding: 10px;
     width: 100%;
@@ -57,7 +95,8 @@
 }
 
 #node-input {
-    display: inline;
+    display: inline-block;
+    width: 60px;
 }
 
 #voltage-div-header {
@@ -66,24 +105,7 @@
 }
 
 #voltage-div {
-    height: 15vh;
-}
-
-/* 3D / 2D views */
-.mainview {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-.subview {
-    position: absolute;
-    top: 0px;
-    margin: 20px;
-    width: 86px;
-    border:3px solid #333;
-    border-radius: 5px;
-    z-index: 2;
+    height: 35vh;
 }
 
 /* Info sidebar */
@@ -96,26 +118,12 @@
     height: 290px;
 }
 
-#node-input {
-    width: 60px;
+.rank-rect:hover {
+    cursor: pointer;
 }
 
-/* Canvas styles */
-canvas {
-    position: absolute;
-}
-
-#canvas3d {
-    display: block;
-}
-
-#canvas2d {
-    display: block;
-    margin: 0 auto;
-}
-
-nav {
-    float: right;
+#frequency-div {
+    height: 35vh;
 }
 
 .nav-pills > a.nav-link.active {
@@ -123,19 +131,21 @@ nav {
     background-color: #343a40;
 }
 
+.btn:hover {
+    cursor: pointer;
+}
+
 /* Medium tablet */
-@media only screen and (max-width: 1023px) {
+@media only screen and (max-width: 1199px) {
     #app {
         position: relative;
-        height: 100vw;
-        max-height: 70vh;
+        height: 60vw;
     }
 }
 
 /* Small mobile phone */
 @media only screen and (max-width: 767px) {
     .subview {
-        margin: 10px;
         width: 80px;
         height: 80px;
     }

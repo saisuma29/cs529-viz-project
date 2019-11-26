@@ -1,7 +1,7 @@
-import * as d3 from "d3";
+import * as d3 from 'd3';
 
 export class NodeRanking {
-  init(layers) {
+  init(layers, lineChart) {
     this.currentLayer = 1;
     var values = [];
 
@@ -47,57 +47,59 @@ export class NodeRanking {
 
     //create main svg element
     this.svgDoc = d3
-      .select("#rank-list")
-      .append("svg")
-      .style("height", "100%");
+      .select('#rank-list')
+      .append('svg')
+      .style('height', '100%');
 
     this.svgDoc
-      .append("g")
-      .selectAll("rect")
+      .append('g')
+      .selectAll('rect')
       .data(sorted)
       .enter()
-      .append("rect")
-      .attr("width", function(d, i) {
+      .append('rect')
+      .attr('class', 'rank-rect')
+      .attr('width', function(d, i) {
         return values[i] * 1000;
         // return sorted[i]  * 2000
       })
-      .attr("height", 20)
-      .attr("fill", function(d, i) {
+      .attr('height', 20)
+      .attr('fill', function(d, i) {
         return colorScale(i);
       })
-      .attr("fill-opacity", 0.8)
-      .attr("stroke", function(d, i) {
+      .attr('fill-opacity', 0.8)
+      .attr('stroke', function(d, i) {
         return colorScale(i);
       })
-      .attr("x", 0)
-      .attr("y", function(d, i) {
+      .attr('x', 90)
+      .attr('y', function(d, i) {
         return 30 * i;
       })
-      .on("click", function(d, i) {
-        console.log(i);
+      .on('click', function(d, i) {
         console.log(d);
+        console.log(i);
+        lineChart.nodeInput.value = i;
+        lineChart.update(layers, i);
       });
     this.svgDoc
-      .append("g")
-      .selectAll("text_bars")
+      .append('g')
+      .selectAll('text_bars')
       .data(sorted)
       .enter()
-      .append("text")
-      .attr("dx", 10)
-      .attr("dy", function(d, i) {
+      .append('text')
+      .attr('dx', 10)
+      .attr('dy', function(d, i) {
         return 15 + 30 * i;
       })
-      .attr("id", "texts")
+      .attr('id', 'texts')
       .text(function(d, i) {
         return `Node ${i}`;
       })
-      .attr("fill", "white");
+      .attr('fill', 'white');
   }
 
-  update(layers, timestamp) {
+  update(layers, timestamp, lineChart) {
     var values = [];
 
-    
     if (this.currentLayer == 1 || this.currentLayer == 3) {
       for (var row = 0; row < 100; row++) {
         values.push(Math.abs(1.8 - layers[this.currentLayer][row][timestamp]));
@@ -138,20 +140,18 @@ export class NodeRanking {
 
     //rejoin data
     var rect = this.svgDoc
-      .select("g")
-      .selectAll("rect")
+      .select('g')
+      .selectAll('rect')
       .data(sorted);
     rect.exit().remove(); //remove unneeded bars
     rect
       .enter()
-      .append("rect")
-      .attr("x", 50)
-      .attr("height", 20);
+      .append('rect')
+      .attr('x', 90)
+      .attr('height', 20);
     //update all bars to new positions
     rect
-      .transition()
-      .duration(0)
-      .attr("y", function(d, i) {
+      .attr('y', function(d, i) {
         for (var j = 0; j < 100; j++) {
           if (i == parseInt(label_nodes[j])) {
             var id_found = j;
@@ -159,27 +159,34 @@ export class NodeRanking {
         }
         return 30 * id_found; //label_nodes[i]
       })
-      .attr("width", function(d, i) {
+      .attr('width', function(d, i) {
         for (var j = 0; j < 100; j++) {
           if (i == parseInt(label_nodes[j])) {
             var id_found = j;
           }
         }
         return sorted[id_found] * 1000;
+      })
+      .on('click', function(d, i) {
+        console.log(d);
+        console.log(i);
+        lineChart.nodeInput.value = i;
+        lineChart.update(layers, i);
       });
 
-    d3.selectAll("#texts").remove();
+    d3.selectAll('#texts').remove();
     this.svgDoc
-      .append("g")
-      .selectAll("text_bars")
+      .append('g')
+      .selectAll('text_bars')
       .data(sorted)
       .enter()
-      .append("text")
-      .attr("dx", 10)
-      .attr("dy", function(d, i) {
+      .append('text')
+      .attr('dx', 10)
+      .attr('dy', function(d, i) {
         return 15 + 30 * i;
       })
-      .attr("id", "texts")
+      .attr('id', 'texts')
+      .attr('fill', 'white')
       .text(function(d, i) {
         return `Node ${label_nodes[i]}`;
       });
