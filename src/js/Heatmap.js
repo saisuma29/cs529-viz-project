@@ -62,6 +62,15 @@ export class Heatmap {
       .attr('height', y)
       .attr('fill', d => this.colorScaleG(d));
 
+    this.svg0.append("text")             
+      .attr("transform",
+            "translate(" + (this.svg0.attr('width') / 2) + " ," + 
+                           (20) + ")")
+      .style("text-anchor", "middle")
+      .text("Layer0 (G)")
+      .attr('fill',"black")
+      .attr('font-size', '20px')
+
     this.svg1
       .selectAll('rect')
       .data(content1)
@@ -72,6 +81,15 @@ export class Heatmap {
       .attr('width', x)
       .attr('height', y)
       .attr('fill', d => this.colorScaleP(d));
+
+    this.svg1.append("text")             
+    .attr("transform",
+          "translate(" + (this.svg1.attr('width') / 2) + " ," + 
+                         (20) + ")")
+    .style("text-anchor", "middle")
+    .text("Layer1 (P)")
+    .attr('fill',"black")
+    .attr('font-size', '20px')
 
     this.svg2
       .selectAll('rect')
@@ -84,6 +102,15 @@ export class Heatmap {
       .attr('height', y)
       .attr('fill', d => this.colorScaleG(d));
 
+    this.svg2.append("text")             
+    .attr("transform",
+          "translate(" + (this.svg2.attr('width') / 2) + " ," + 
+                         (20) + ")")
+    .style("text-anchor", "middle")
+    .text("Layer2 (G)")
+    .attr('fill',"black")
+    .attr('font-size', '20px')
+
     this.svg3
       .selectAll('rect')
       .data(content3)
@@ -94,5 +121,14 @@ export class Heatmap {
       .attr('width', x)
       .attr('height', y)
       .attr('fill', d => this.colorScaleP(d));
+
+    this.svg3.append("text")             
+    .attr("transform",
+          "translate(" + (this.svg3.attr('width') / 2) + " ," + 
+                         (20) + ")")
+    .style("text-anchor", "middle")
+    .text("Layer3 (P)")
+    .attr('fill',"black")
+    .attr('font-size', '20px')
   }
 }
