@@ -6,7 +6,7 @@ export class Histogram {
     this.containerId = containerId;
 
     var color = 'steelblue'; // color of bars
-    var ticks = 10; // number of bars = ticks -2
+    var ticks = 15; // number of bars = ticks -2
     var padding = 5; //padding between bars
 
     // get data of a specific time stamp
@@ -16,7 +16,7 @@ export class Histogram {
       values.push((1.8 - layers[1][row][timestamp]) * 1000);
     }
 
-    var margin = { top: 30, right: 15, bottom: 20, left: 15 };
+    var margin = { top: 30, right: 15, bottom: 50, left: 15 };
     var width =
       document.getElementById(this.containerId).clientWidth -
       margin.left -
@@ -27,8 +27,8 @@ export class Histogram {
       margin.bottom;
 
     // range for x-axis
-    var max = 300;
-    var min = -50;
+    var max = 250;
+    var min = 0;
 
     // A formatter for counts.
     var formatCount = d3.format(',.000f');
@@ -99,10 +99,10 @@ export class Histogram {
       .enter()
       .append('text')
       .attr('dy', function(d) {
-        return scaleBarHeight(d.length) - 5;
+        return height-15//scaleBarHeight(d.length) - 5;
       })
       .attr('x', function(d, i) {
-        return width / (ticks * 2) + (i * width) / (ticks - 2) + 8;
+        return width / (ticks * 2) + (i * width) / (ticks - 2) + 3;
       })
       // .attr("y",function(d) {
       //   return scaleBarHeight(d.length) -10;
@@ -115,7 +115,7 @@ export class Histogram {
           return formatCount(d.length);
         }
       })
-      .attr('fill', 'white')
+      .attr('fill', 'yellow')
       .attr('font-size', '20px')
       .attr('id', 'texts-hist');
 
@@ -124,15 +124,29 @@ export class Histogram {
       .attr('class', 'x axis')
       .attr('transform', 'translate(0,' + height + ')')
       .call(xAxis)
-      .attr('font-size', '14px');
+      .attr('font-size', '20px')
+
+
+          // text label for the x axis
+    this.svgHist.append("text")             
+    .attr("transform",
+          "translate(" + (width/2) + " ," + 
+                        (height + 45) + ")")
+    .style("text-anchor", "middle")
+    .text("Voltage drop (mV)")
+    .attr('fill',"white")
+    .attr('font-size', '20px')
   }
+
+
+
 
   //----------------------------------------------------------------------
   // update the histogram
   update(layers, currentLayer, timestamp) {
     // color of bars
     var color = 'steelblue';
-    var ticks = 10;
+    var ticks = 15;
     var padding = 5;
     // get data of a specific time stamp
     var values = [];
@@ -148,15 +162,15 @@ export class Histogram {
       }
     }
 
-    var margin = { top: 30, right: 15, bottom: 20, left: 15 };
+    var margin = { top: 30, right: 15, bottom: 50, left: 15 };
     var width =
       document.getElementById(this.containerId).clientWidth -
       margin.left -
       margin.right;
     var height = document.getElementById(this.containerId).clientHeight - margin.top - margin.bottom;
 
-    var max = 300; //d3.max(values);
-    var min = -50; //d3.min(values);
+    var max = 250; //d3.max(values);
+    var min = 0; //d3.min(values);
 
     // A formatter for counts.
     var formatCount = d3.format(',.00f');
@@ -200,6 +214,8 @@ export class Histogram {
 
     rect.enter().append('rect');
     rect
+      .transition()
+      .duration(100)
       .attr('y', function(d, i) {
         return scaleBarHeight(d.length);
       })
@@ -211,6 +227,8 @@ export class Histogram {
       });
 
     d3.selectAll('#texts-hist').remove();
+
+
     this.svgHist
       .append('g')
       .selectAll('text_bars')
@@ -218,10 +236,10 @@ export class Histogram {
       .enter()
       .append('text')
       .attr('dx', function(d, i) {
-        return width / (ticks * 2) + (i * width) / (ticks - 2) + 8;
+        return width / (ticks * 2) + (i * width) / (ticks - 2) + 3;
       })
       .attr('dy', function(d) {
-        return scaleBarHeight(d.length) - 5;
+        return height-15//scaleBarHeight(d.length) - 5;
       })
       .attr('text-anchor', 'middle')
       .text(function(d, i) {
@@ -231,7 +249,7 @@ export class Histogram {
           return formatCount(d.length);
         }
       })
-      .attr('fill', 'white')
+      .attr('fill', 'yellow')
       .attr('font-size', '20px')
       .attr('id', 'texts-hist');
   }
