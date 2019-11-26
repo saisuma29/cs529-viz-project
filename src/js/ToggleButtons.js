@@ -6,17 +6,5 @@ export class ToggleButtons {
 
     // Remove hidden field
     document.getElementById('toggle-view').classList.remove('d-none');
-
-    // Set onclick listener
-    this.button2d.addEventListener('click', clickEvent);
-    this.button3d.addEventListener('click', clickEvent);
-
-    function clickEvent() {
-      // If not already clicked on
-      if (!this.classList.contains('active')) {
-        canvas3D.swapCanvasSize();
-        canvas2D.swapCanvasSize();
-      }
-    }
   }
 }

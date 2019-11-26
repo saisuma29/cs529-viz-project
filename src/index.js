@@ -16,6 +16,7 @@ import { NodeRanking } from './js/NodeRanking';
 import { Histogram } from './js/Histogram';
 import { LineChart } from './js/LineChart';
 import { ToggleButtons } from './js/ToggleButtons';
+import { Legend } from './js/Legend';
 import { Play } from './js/Play';
 
 // CSV data
@@ -29,11 +30,13 @@ const canvas2D = new Canvas2D('canvas2d', 'div2d', true);
 const mesh3D = new Mesh3D();
 const heatmap = new Heatmap();
 const toggleButtons = new ToggleButtons();
+const legend = new Legend();
 const nodeRanking = new NodeRanking();
 const histogram = new Histogram();
 const lineChart = new LineChart();
 const play = new Play();
 var layers;
+var currentNode = 0;
 
 // Load CSV files
 Promise.all([d3.csv(csv0), d3.csv(csv1), d3.csv(csv2), d3.csv(csv3)]).then(
@@ -61,7 +64,7 @@ function run() {
   heatmap.init(layers, canvas2D.divId);
 
   // Create node ranking table
-  nodeRanking.init(layers);
+  nodeRanking.init(layers, lineChart);
 
   // Create histogram
   histogram.init(layers, 'histogram', 'frequency-div');
@@ -79,11 +82,27 @@ function run() {
   window.onresize = () => {
     canvas3D.resize();
     canvas2D.resize();
+    heatmap.update(layers, play.slider.value);
+    lineChart.resize();
+    lineChart.update(layers, parseInt(lineChart.nodeInput.value));
   };
 
+  // 3D / 2D toggle
+  // Set onclick listener
+  toggleButtons.button2d.addEventListener('click', swapViews);
+  toggleButtons.button3d.addEventListener('click', swapViews);
+  function swapViews() {
+    // If not already clicked on
+    if (!this.classList.contains('active')) {
+      canvas3D.swapCanvasSize();
+      canvas2D.swapCanvasSize();
+      heatmap.update(layers, play.slider.value);
+    }
+  }
+
   // Layer toggles for rank list
-  const layerRankButtons = document.getElementsByClassName('layer-rank-toggle');
-  for (let button of layerRankButtons) {
+  const layerToggles = document.getElementsByClassName('layer-rank-toggle');
+  for (let button of layerToggles) {
     // Set on click listener for each toggle
     button.addEventListener('click', () => {
       // Set layer for node ranking table
@@ -91,11 +110,53 @@ function run() {
       nodeRanking.currentLayer = currentLayer;
 
       // Update to reflect change
-      nodeRanking.update(layers, play.slider.value);
+      nodeRanking.update(layers, play.slider.value, lineChart);
       histogram.update(layers, currentLayer, play.slider.value);
-      lineChart.update(layers, currentLayer, 56);
     });
   }
+
+  // Set play button onclick listener
+  play.button.addEventListener('click', () => {
+    // Pause timelapse
+    if (play.isPlaying) {
+      play.pauseTimelapse();
+    } 
+    // Play timelapse
+    else {
+      play.playTimelapse();
+
+      // Start up play timer
+      play.timer = setInterval(() => {
+        // Get time + 1
+        let t = (parseInt(play.slider.value) + play.timestep) % play.timeLength;
+        play.slider.value = t;
+        play.timeInput.value = t;
+
+        // Update shapes to new time
+        mesh3D.update(layers, t);
+        heatmap.update(layers, t);
+        nodeRanking.update(layers, t, lineChart);
+        histogram.update(layers, nodeRanking.currentLayer, t);
+      }, 1000 / play.fps);
+    }
+  });
+
+  // Set slider input change listener
+  play.slider.addEventListener("input", () => {
+    // Pause timelapse
+    play.pauseTimelapse();
+
+    // Update shapes to current time
+    let t = parseInt(play.slider.value) % play.timeLength;
+    play.slider.value = t;
+    play.timeInput.value = t
+
+    // Update shapes to new time
+    mesh3D.update(layers, t);
+    heatmap.update(layers, t);
+    nodeRanking.update(layers, t, lineChart);
+    histogram.update(layers, nodeRanking.currentLayer, t);
+  });
 
   // Time input
   play.timeInput.addEventListener('input', () => {
@@ -112,18 +173,13 @@ function run() {
     play.timeInput.value = t;
 
     // Update graphs
-    for (let shape of [mesh3D, heatmap, nodeRanking]) {
-      shape.update(layers, t);
-    }
+    mesh3D.update(layers, t);
+    heatmap.update(layers, t);
+    nodeRanking.update(layers, t, lineChart);
+    histogram.update(layers, nodeRanking.currentLayer, t);
   });
 
-  // Voltage Histogram
-  histogram.updateButton.addEventListener('click', () => {
-    let currentLayer = nodeRanking.currentLayer;
-    let t = play.slider.value;
-    histogram.update(layers, currentLayer, t);
-  });
-
+  // Node input change
   lineChart.nodeInput.addEventListener('input', () => {
     // Update shapes to current time (zero if null input)
     let node =
@@ -133,7 +189,7 @@ function run() {
         : 0;
 
     lineChart.nodeInput.value = node;
-    lineChart.update(layers, nodeRanking.currentLayer, node);
+    lineChart.update(layers,  node);
   });
 
   // Begin animation loop

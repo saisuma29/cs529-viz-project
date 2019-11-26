@@ -7,7 +7,7 @@
   <body style="background-color: #222; color: #ddd;">
     <div class="row">
       <!-- Main view -->
-      <div class="col-lg-8">
+      <div class="col-xl-6">
         <!-- App -->
         <div id="app">
           <div id="loading">Loading data...</div>
@@ -27,73 +27,75 @@
             </div>
           </div>
 
-          <!-- Play button + time slider -->
-          <div id="time-div">
-            <div class="d-flex align-items-center">
-              <!-- Play / pause button (source: https://codepen.io/kucerajacob/pen/WvPrJL) -->
-              <button id="play-button">
-                <svg
-                  width="30px"
-                  height="30px"
-                  viewBox="0 0 36 36"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                >
-                  <defs>
-                    <path
-                      id="ytp-12"
-                      d="M 11 10 L 18 13.74 18 22.28 11 26 M 18 13.74 L 26 18 26 18 18 22.28"
-                    >
-                      <animate
-                        id="animation"
-                        begin="indefinite"
-                        attributeType="XML"
-                        attributeName="d"
-                        fill="freeze"
-                        from="M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26"
-                        to="M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28"
-                        dur="0.1s"
-                        keySplines=".4 0 1 1"
-                        repeatCount="1"
-                      ></animate>
-                    </path>
-                  </defs>
-                  <use xlink:href="#ytp-12" class="ytp-svg-shadow"></use>
-                  <use xlink:href="#ytp-12" class="ytp-svg-fill"></use>
-                </svg>
-              </button>
-
-              <!-- Time slider (source: https://jsfiddle.net/bfbun6cc/4/) -->
-              <input
-                type="range"
-                id="time-range"
-                class="custom-range"
-                min="0"
-                step="1"
-                value="0"
-              />
-
-              <input
-                type="number"
-                id="time-input"
-                class="form-control form-control-sm text-light bg-dark border-dark"
-                min="0"
-                step="1"
-                value="0"
-              />
-            </div>
-          </div>
+          <div id="legend-div"></div>
 
           <!-- 3D view -->
           <div id="div3d" class="mainview"></div>
 
           <!-- 2D view -->
           <div id="div2d" class="subview">
-            <div id="heatmap-1"></div>
-            <div id="heatmap-2"></div>
-            <div id="heatmap-3"></div>
-            <div id="heatmap-4"></div>
+            <div class="heatmap-div"></div>
+            <div class="heatmap-div"></div>
+            <div class="heatmap-div"></div>
+            <div class="heatmap-div"></div>
+          </div>
+        </div>
+
+        <!-- Play button + time slider -->
+        <div id="time-div">
+          <div class="d-flex align-items-center">
+            <!-- Play / pause button (source: https://codepen.io/kucerajacob/pen/WvPrJL) -->
+            <button id="play-button">
+              <svg
+                width="30px"
+                height="30px"
+                viewBox="0 0 36 36"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs>
+                  <path
+                    id="ytp-12"
+                    d="M 11 10 L 18 13.74 18 22.28 11 26 M 18 13.74 L 26 18 26 18 18 22.28"
+                  >
+                    <animate
+                      id="animation"
+                      begin="indefinite"
+                      attributeType="XML"
+                      attributeName="d"
+                      fill="freeze"
+                      from="M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26"
+                      to="M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28"
+                      dur="0.1s"
+                      keySplines=".4 0 1 1"
+                      repeatCount="1"
+                    ></animate>
+                  </path>
+                </defs>
+                <use xlink:href="#ytp-12" class="ytp-svg-shadow"></use>
+                <use xlink:href="#ytp-12" class="ytp-svg-fill"></use>
+              </svg>
+            </button>
+
+            <!-- Time slider (source: https://jsfiddle.net/bfbun6cc/4/) -->
+            <input
+              type="range"
+              id="time-range"
+              class="custom-range"
+              min="0"
+              step="1"
+              value="0"
+            />
+
+            <input
+              type="number"
+              id="time-input"
+              class="form-control form-control-sm text-light bg-dark border-dark"
+              min="0"
+              step="1"
+              value="0"
+            />
           </div>
         </div>
 
@@ -117,11 +119,11 @@
       </div>
 
       <!-- Sidebar info -->
-      <div class="col-lg-4">
+      <div class="col-xl-6">
         <div id="app-info">
           <!-- Tabs -->
-          <nav>
-            <div class="nav nav-pills" id="nav-tab" role="tablist">
+          <nav class="float-right">
+            <div class="nav nav-pills small" id="nav-tab" role="tablist">
               <a
                 class="nav-link active"
                 id="nodes-tab"
@@ -143,7 +145,7 @@
             </div>
           </nav>
 
-          <h2 id="title">PowerVIS</h2>
+          <h3 id="title">PowerVIS</h3>
 
           <hr class="border-dark" />
 
@@ -204,9 +206,6 @@
 
               <h5>
                 Voltage Drop Frequency
-                <button id="frequency-update" class="btn btn-sm btn-dark ml-2">
-                  Update
-                </button>
               </h5>
 
               <!-- Frequency Histogram -->
