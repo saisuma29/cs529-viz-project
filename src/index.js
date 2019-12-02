@@ -85,6 +85,8 @@ function run() {
     heatmap.update(layers, play.slider.value);
     lineChart.resize();
     lineChart.update(layers, parseInt(lineChart.nodeInput.value));
+    histogram.resize();
+    histogram.update(layers, nodeRanking.currentLayer, play.slider.value);
   };
 
   // 3D / 2D toggle
@@ -120,7 +122,7 @@ function run() {
     // Pause timelapse
     if (play.isPlaying) {
       play.pauseTimelapse();
-    } 
+    }
     // Play timelapse
     else {
       play.playTimelapse();
@@ -142,14 +144,14 @@ function run() {
   });
 
   // Set slider input change listener
-  play.slider.addEventListener("input", () => {
+  play.slider.addEventListener('input', () => {
     // Pause timelapse
     play.pauseTimelapse();
 
     // Update shapes to current time
     let t = parseInt(play.slider.value) % play.timeLength;
     play.slider.value = t;
-    play.timeInput.value = t
+    play.timeInput.value = t;
 
     // Update shapes to new time
     mesh3D.update(layers, t);
@@ -189,7 +191,7 @@ function run() {
         : 0;
 
     lineChart.nodeInput.value = node;
-    lineChart.update(layers,  node);
+    lineChart.update(layers, node);
   });
 
   // Begin animation loop

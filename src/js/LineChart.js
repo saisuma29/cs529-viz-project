@@ -13,27 +13,28 @@ export class LineChart {
     this.height =
       this.containerDiv.clientHeight / 2 - this.margin.top - this.margin.bottom;
 
-
     this.svgP = d3
       .select(this.containerDiv)
       .append('svg')
-      .attr('width', this.width + this.margin.left*2 + this.margin.right)
+      .attr('class', 'linechart-svg')
+      .attr('width', this.width + this.margin.left * 2 + this.margin.right)
       .attr('height', this.height + this.margin.top + this.margin.bottom)
       .append('g')
       .attr(
         'transform',
-        'translate(' + this.margin.left*2 +',' + this.margin.top + ')'
+        'translate(' + this.margin.left * 2 + ',' + this.margin.top + ')'
       );
 
     this.svgG = d3
       .select(this.containerDiv)
       .append('svg')
-      .attr('width', this.width + this.margin.left*2 + this.margin.right)
+      .attr('class', 'linechart-svg')
+      .attr('width', this.width + this.margin.left * 2 + this.margin.right)
       .attr('height', this.height + this.margin.top + this.margin.bottom)
       .append('g')
       .attr(
         'transform',
-        'translate(' + this.margin.left*2 +',' + this.margin.top + ')'
+        'translate(' + this.margin.left * 2 + ',' + this.margin.top + ')'
       );
 
     this.update(layers, 0);
@@ -50,7 +51,7 @@ export class LineChart {
     let xScale = d3
       .scaleLinear()
       .domain([0, 1000]) // input
-      .range([0, this.width - this.margin.left*2 + this.margin.right]); // output
+      .range([0, this.width - this.margin.left * 2 + this.margin.right]); // output
 
     let yDomainP = [1.5, 1.8];
     let colorP = 'violet';
@@ -80,63 +81,60 @@ export class LineChart {
       .attr('class', 'x axis')
       .attr('transform', 'translate(0,' + this.height + ')')
       .call(d3.axisBottom(xScale)) // Create an axis component with d3.axisBottom
-      .attr('font-size', '20px')
+      .attr('font-size', '20px');
 
+    // text label for the x axis
+    this.svgP
+      .append('text')
+      .attr(
+        'transform',
+        'translate(' + this.width / 2 + ' ,' + (this.height + 45) + ')'
+      )
+      .style('text-anchor', 'middle')
+      .text('Timestamp')
+      .attr('fill', 'white')
+      .attr('font-size', '20px');
 
+    // text label for the x axis
+    this.svgG
+      .append('text')
+      .attr(
+        'transform',
+        'translate(' + this.width / 2 + ' ,' + (this.height + 45) + ')'
+      )
+      .style('text-anchor', 'middle')
+      .text('Timestamp')
+      .attr('fill', 'white')
+      .attr('font-size', '20px');
 
+    this.svgP
+      .append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0 - this.margin.left - 25)
+      .attr('x', 0 - this.height / 2)
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .text('Voltage (V)')
+      .attr('fill', 'white')
+      .attr('font-size', '20px');
 
-
-  // text label for the x axis
-    this.svgP.append("text")             
-      .attr("transform",
-            "translate(" + (this.width/2) + " ," + 
-                           (this.height + 45) + ")")
-      .style("text-anchor", "middle")
-      .text("Timestamp")
-      .attr('fill',"white")
-      .attr('font-size', '20px')
-
-  // text label for the x axis
-  this.svgG.append("text")             
-  .attr("transform",
-        "translate(" + (this.width/2) + " ," + 
-                       (this.height + 45) + ")")
-  .style("text-anchor", "middle")
-  .text("Timestamp")
-  .attr('fill',"white")
-  .attr('font-size', '20px')
-
-  this.svgP.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - this.margin.left - 25)
-      .attr("x",0 - (this.height / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Voltage (V)")
-      .attr('fill',"white")
-      .attr('font-size', '20px')
-
-  this.svgG.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - this.margin.left - 25)
-      .attr("x",0 - (this.height / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Voltage (V)")
-      .attr('fill',"white")
-      .attr('font-size', '20px')
-
-
-
-
+    this.svgG
+      .append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0 - this.margin.left - 25)
+      .attr('x', 0 - this.height / 2)
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .text('Voltage (V)')
+      .attr('fill', 'white')
+      .attr('font-size', '20px');
 
     // Call the y axis in a group tag
     this.svgP
       .append('g')
       .attr('class', 'y axis')
       .call(d3.axisLeft(yScaleP).ticks(4)) // Create an axis component with d3.axisLeft
-      .attr('font-size', '20px')
-
+      .attr('font-size', '20px');
 
     // Add line
     this.svgP
@@ -164,16 +162,14 @@ export class LineChart {
       .attr('class', 'x axis')
       .attr('transform', 'translate(0,' + this.height + ')')
       .call(d3.axisBottom(xScale)) // Create an axis component with d3.axisBottom
-      .attr('font-size', '20px')
-
+      .attr('font-size', '20px');
 
     // Call the y axis in a group tag
     this.svgG
       .append('g')
       .attr('class', 'y axis')
       .call(d3.axisLeft(yScaleG).ticks(4)) // Create an axis component with d3.axisLeft
-      .attr('font-size', '20px')
-
+      .attr('font-size', '20px');
 
     // Add line
     this.svgG
@@ -201,11 +197,7 @@ export class LineChart {
     this.height =
       this.containerDiv.clientHeight / 2 - this.margin.top - this.margin.bottom;
 
-    this.svgP
-      .attr('width', this.width + this.margin.left + this.margin.right)
-      .attr('height', this.height + this.margin.top + this.margin.bottom);
-
-    this.svgG
+    d3.selectAll('.linechart-svg')
       .attr('width', this.width + this.margin.left + this.margin.right)
       .attr('height', this.height + this.margin.top + this.margin.bottom);
   }

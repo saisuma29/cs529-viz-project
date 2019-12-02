@@ -62,9 +62,8 @@
     position: absolute;
     bottom: 0px;
     right: 0px;
-    padding: 20px;
     width: 100px;
-    height: 375px;
+    height: 350px;
     z-index: 2;
 }
 
@@ -73,17 +72,16 @@
     /* position: absolute;
     bottom: 0px; */
     background-color: #181818;
-    padding: 10px;
+    padding: 5px;
     width: 100%;
     z-index: 2;
 }
 
 #play-button {
     outline: none;
-    border: 0px solid;
+    border: none;
     background: transparent;
     fill: #fff;
-    opacity: 0.85;
 }
 
 #time-range {
@@ -100,7 +98,6 @@
 }
 
 #voltage-div-header {
-    height: 5vh;
     padding: 10px;
 }
 
@@ -124,11 +121,6 @@
 
 #frequency-div {
     height: 35vh;
-}
-
-.nav-pills > a.nav-link.active {
-    /* Bootstrap dark */
-    background-color: #343a40;
 }
 
 .btn:hover {

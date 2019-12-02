@@ -102,7 +102,7 @@
         <!-- Voltage Info -->
         <div id="voltage-div-header">
           <h5>
-            Voltage History - Node : 
+            Voltage History - Node :
             <input
               type="number"
               id="node-input"
@@ -121,102 +121,101 @@
       <!-- Sidebar info -->
       <div class="col-xl-6">
         <div id="app-info">
-          <!-- Tabs -->
-          <nav class="float-right">
-            <div class="nav nav-pills small" id="nav-tab" role="tablist">
-              <a
-                class="nav-link active"
-                id="nodes-tab"
-                data-toggle="pill"
-                href="#nav-nodes"
-                role="tab"
-              >
-                Nodes
-              </a>
-              <!-- <a
-                class="nav-link"
-                id="system-tab"
-                data-toggle="pill"
-                href="#nav-system"
-                role="tab"
-              >
-                System
-              </a> -->
-            </div>
-          </nav>
+          <!-- Tutorial modal button -->
+          <button
+            type="button"
+            class="btn btn-sm btn-dark float-right"
+            data-toggle="modal"
+            data-target="#tutorial-modal"
+          >
+            Tutorial
+          </button>
 
           <h3 id="title">PowerVIS</h3>
 
           <hr class="border-dark" />
 
-          <!-- Tab content -->
-          <div class="tab-content" id="tabContent">
-            <!-- Nodes Content -->
-            <div
-              class="tab-pane fade show active"
-              id="nav-nodes"
-              role="tabpanel"
+          <h5>
+            Node Ranking - Layer :
+            <!-- Layer toggles -->
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+              <!-- Layer 0 toggle -->
+              <label
+                class="btn btn-sm btn-dark layer-rank-toggle"
+                id="layer0-rank-toggle"
+                data-layer="0"
+              >
+                <input type="radio" autocomplete="off" checked /> 0
+              </label>
+
+              <!-- Layer 1 toggle -->
+              <label
+                class="btn btn-sm btn-dark layer-rank-toggle active"
+                id="layer1-rank-toggle"
+                data-layer="1"
+              >
+                <input type="radio" autocomplete="off" checked /> 1
+              </label>
+
+              <!-- Layer 2 toggle -->
+              <label
+                class="btn btn-sm btn-dark layer-rank-toggle"
+                id="layer2-rank-toggle"
+                data-layer="2"
+              >
+                <input type="radio" autocomplete="off" checked /> 2
+              </label>
+
+              <!-- Layer 3 toggle -->
+              <label
+                class="btn btn-sm btn-dark layer-rank-toggle"
+                id="layer3-rank-toggle"
+                data-layer="3"
+              >
+                <input type="radio" autocomplete="off" checked /> 3
+              </label>
+            </div>
+          </h5>
+
+          <!-- Node rank list -->
+          <div id="rank-list" class="my-4"></div>
+
+          <hr class="border-dark" />
+
+          <h5>
+            Voltage Drop Distribution
+          </h5>
+
+          <!-- Frequency Histogram -->
+          <div id="frequency-div" class="my-4"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tutorial Modal -->
+    <div class="modal fade" id="tutorial-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content text-dark">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              PowerVIS - Tutorial
+            </h5>
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
             >
-              <h5>
-                Node Ranking - Layer :
-                <!-- Layer toggles -->
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <!-- Layer 0 toggle -->
-                  <label
-                    class="btn btn-sm btn-dark layer-rank-toggle"
-                    id="layer0-rank-toggle"
-                    data-layer="0"
-                  >
-                    <input type="radio" autocomplete="off" checked /> 0
-                  </label>
-
-                  <!-- Layer 1 toggle -->
-                  <label
-                    class="btn btn-sm btn-dark layer-rank-toggle active"
-                    id="layer1-rank-toggle"
-                    data-layer="1"
-                  >
-                    <input type="radio" autocomplete="off" checked /> 1
-                  </label>
-
-                  <!-- Layer 2 toggle -->
-                  <label
-                    class="btn btn-sm btn-dark layer-rank-toggle"
-                    id="layer2-rank-toggle"
-                    data-layer="2"
-                  >
-                    <input type="radio" autocomplete="off" checked /> 2
-                  </label>
-
-                  <!-- Layer 3 toggle -->
-                  <label
-                    class="btn btn-sm btn-dark layer-rank-toggle"
-                    id="layer3-rank-toggle"
-                    data-layer="3"
-                  >
-                    <input type="radio" autocomplete="off" checked /> 3
-                  </label>
-                </div>
-              </h5>
-
-              <!-- Node rank list -->
-              <div id="rank-list" class="my-4"></div>
-
-              <hr class="border-dark" />
-
-              <h5>
-                Voltage Drop Distribution
-              </h5>
-
-              <!-- Frequency Histogram -->
-              <div id="frequency-div" class="my-4"></div>
-            </div>
-
-            <!-- System Content -->
-            <div class="tab-pane fade" id="nav-system" role="tabpanel">
-              <h5>System Information</h5>
-              <p>To be updated...</p>
-            </div>
+              Close
+            </button>
           </div>
         </div>
       </div>
