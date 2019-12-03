@@ -53,17 +53,17 @@ export class Heatmap {
     this.svg3.html(null);
 
     // tool tip
-    let tip0 = d3Tip()
+    this.tip0 = d3Tip()
       .attr('class', 'd3-tip')
       .style("visibility", "visible")
       .style("opacity", 0)
       .offset([-20, 0])
       .html(function (d, i) {
-        let val = layers[0][0][i];
+        let val = layers[0][i][timestamp];
         return "Voltage: " + d3.format(".4f")(val);
       });
 
-    tip0(this.svg0.append("g"));
+    this.tip0(this.svg0.append("g"));
 
     this.svg0
       .selectAll('rect')
@@ -75,8 +75,8 @@ export class Heatmap {
       .attr('width', x)
       .attr('height', y)
       .attr('fill', d => this.colorScaleG(d))
-      .on('mouseover', tip0.show)
-      .on('mouseout', tip0.hide)
+      .on('mouseover', this.tip0.show)
+      .on('mouseout', this.tip0.hide)
       .on('click', function (d, i) {
         console.log("Layer 0 " + "Node " + i);
       })
@@ -96,7 +96,7 @@ export class Heatmap {
       .style("visibility", "visible")
       .offset([-20, 0])
       .html(function (d, i) {
-        let val = layers[1][0][i];
+        let val = layers[1][i][timestamp];
         return "Voltage: " + d3.format(".4f")(val);
       });
 
@@ -133,7 +133,7 @@ export class Heatmap {
       .style("visibility", "visible")
       .offset([-20, 0])
       .html(function (d, i) {
-        let val = layers[2][i][i];
+        let val = layers[2][i][timestamp];
         return "Voltage: " + d3.format(".4f")(val);
       });
 
@@ -170,7 +170,7 @@ export class Heatmap {
       .style("visibility", "visible")
       .offset([-20, 0])
       .html(function (d, i) {
-        let val = layers[3][0][i];
+        let val = layers[0][i][timestamp];
         return "Voltage: " + d3.format(".4f")(val);
       });
 
