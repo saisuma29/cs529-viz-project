@@ -3,74 +3,70 @@ import * as d3 from 'd3';
 export class Histogram {
   init(layers, divId, containerId) {
     this.divId = divId;
-    this.containerId = containerId;
+    this.containerDiv = document.getElementById(containerId);
 
-    var color = 'steelblue'; // color of bars
-    var ticks = 15; // number of bars = ticks -2
-    var padding = 5; //padding between bars
+    this.color = 'steelblue'; // color of bars
+    this.ticks = 15; // number of bars = ticks -2
+    this.padding = 5; //padding between bars
 
     // get data of a specific time stamp
-    var values = [];
-    var timestamp = 0;
-    for (var row = 0; row < 100; row++) {
+    let values = [];
+    let timestamp = 0;
+    for (let row = 0; row < 100; row++) {
       values.push((1.8 - layers[1][row][timestamp]) * 1000);
     }
 
-    var margin = { top: 30, right: 15, bottom: 50, left: 15 };
-    var width =
-      document.getElementById(this.containerId).clientWidth -
-      margin.left -
-      margin.right;
-    var height =
-      document.getElementById(this.containerId).clientHeight -
-      margin.top -
-      margin.bottom;
+    this.margin = { top: 30, right: 15, bottom: 50, left: 15 };
+    this.width =
+      this.containerDiv.clientWidth - this.margin.left - this.margin.right;
+    this.height =
+      this.containerDiv.clientHeight - this.margin.top - this.margin.bottom;
 
     // range for x-axis
-    var max = 250;
-    var min = 0;
+    let max = 250;
+    let min = 0;
 
     // A formatter for counts.
-    var formatCount = d3.format(',.000f');
+    this.formatCount = d3.format(',.000f');
 
-    var scaleBarWidth = d3
+    this.scaleBarWidth = d3
       .scaleLinear()
       .domain([min, max])
-      .range([0, width]);
+      .range([0, this.width]);
 
     // Generate a histogram using #ticks-2 uniformly-spaced bins.
-    var data = d3
+    let data = d3
       .histogram()
-      .domain(scaleBarWidth.domain())
-      .thresholds(scaleBarWidth.ticks(ticks))(values);
+      .domain(this.scaleBarWidth.domain())
+      .thresholds(this.scaleBarWidth.ticks(this.ticks))(values);
 
-    var yMax = d3.max(data, function(d) {
+    let yMax = d3.max(data, d => {
       return d.length;
     });
-    var yMin = d3.min(data, function(d) {
+    let yMin = d3.min(data, d => {
       return d.length;
     });
 
-    var colorScale = d3
+    this.colorScale = d3
       .scaleLinear()
       .domain([yMin, yMax])
-      .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
+      .range([d3.rgb(this.color).brighter(), d3.rgb(this.color).darker()]);
 
-    var scaleBarHeight = d3
+    this.scaleBarHeight = d3
       .scaleLinear()
       .domain([0, yMax])
-      .range([height, 0]);
+      .range([this.height, 0]);
 
-    var xAxis = d3.axisBottom().scale(scaleBarWidth);
+    let xAxis = d3.axisBottom().scale(this.scaleBarWidth);
 
     this.svgHist = d3
-      .select(`#${containerId}`)
+      .select(this.containerDiv)
       .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
+      .attr('id', this.divId)
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom)
       .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-      .attr('id', divId);
+      .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 
     this.svgHist
       .append('g')
@@ -78,18 +74,18 @@ export class Histogram {
       .data(data)
       .enter()
       .append('rect')
-      .attr('x', function(d, i) {
-        return i * (width / (ticks - 2)) + padding / 2;
+      .attr('x', (d, i) => {
+        return i * (this.width / (this.ticks - 2)) + this.padding / 2;
       })
-      .attr('y', function(d, i) {
-        return scaleBarHeight(d.length);
+      .attr('y', (d, i) => {
+        return this.scaleBarHeight(d.length);
       })
-      .attr('width', width / (ticks - 2) - padding)
-      .attr('height', function(d) {
-        return height - scaleBarHeight(d.length);
+      .attr('width', this.width / (this.ticks - 2) - this.padding)
+      .attr('height', d => {
+        return this.height - this.scaleBarHeight(d.length);
       })
-      .attr('fill', function(d) {
-        return colorScale(d.length);
+      .attr('fill', d => {
+        return this.colorScale(d.length);
       });
 
     this.svgHist
@@ -98,21 +94,22 @@ export class Histogram {
       .data(data)
       .enter()
       .append('text')
-      .attr('dy', function(d) {
-        return height-15//scaleBarHeight(d.length) - 5;
+      .attr('dy', d => {
+        return this.height - 15; //scaleBarHeight(d.length) - 5;
       })
-      .attr('x', function(d, i) {
-        return width / (ticks * 2) + (i * width) / (ticks - 2) + 3;
+      .attr('x', (d, i) => {
+        return (
+          this.width / (this.ticks * 2) +
+          (i * this.width) / (this.ticks - 2) +
+          3
+        );
       })
-      // .attr("y",function(d) {
-      //   return scaleBarHeight(d.length) -10;
-      // })
       .attr('text-anchor', 'middle')
-      .text(function(d, i) {
-        if (i == ticks - 2) {
+      .text((d, i) => {
+        if (i == this.ticks - 2) {
           return '';
         } else {
-          return formatCount(d.length);
+          return this.formatCount(d.length);
         }
       })
       .attr('fill', 'yellow')
@@ -121,91 +118,66 @@ export class Histogram {
 
     this.svgHist
       .append('g')
-      .attr('class', 'x axis')
-      .attr('transform', 'translate(0,' + height + ')')
+      .attr('class', 'x-axis')
+      .attr('transform', `translate(0, ${this.height})`)
       .call(xAxis)
-      .attr('font-size', '20px')
+      .attr('font-size', '20px');
 
-
-          // text label for the x axis
-    this.svgHist.append("text")             
-    .attr("transform",
-          "translate(" + (width/2) + " ," + 
-                        (height + 45) + ")")
-    .style("text-anchor", "middle")
-    .text("Voltage drop (mV)")
-    .attr('fill',"white")
-    .attr('font-size', '20px')
+    // text label for the x axis
+    this.svgHist
+      .append('text')
+      .append('class', 'title-hist')
+      .attr('transform', `translate(${this.width / 2}, ${this.height + 45})`)
+      .style('text-anchor', 'middle')
+      .text('Voltage drop (mV)')
+      .attr('fill', 'white')
+      .attr('font-size', '20px');
   }
-
-
-
 
   //----------------------------------------------------------------------
   // update the histogram
   update(layers, currentLayer, timestamp) {
-    // color of bars
-    var color = 'steelblue';
-    var ticks = 15;
-    var padding = 5;
     // get data of a specific time stamp
-    var values = [];
+    let values = [];
     if (currentLayer == 1 || currentLayer == 3) {
-      for (var row = 0; row < 100; row++) {
+      for (let row = 0; row < 100; row++) {
         values.push(
           1000 * Math.abs(1.8 - layers[currentLayer][row][timestamp])
         );
       }
     } else {
-      for (var row = 0; row < 100; row++) {
+      for (let row = 0; row < 100; row++) {
         values.push(1000 * Math.abs(layers[currentLayer][row][timestamp]));
       }
     }
 
-    var margin = { top: 30, right: 15, bottom: 50, left: 15 };
-    var width =
-      document.getElementById(this.containerId).clientWidth -
-      margin.left -
-      margin.right;
-    var height = document.getElementById(this.containerId).clientHeight - margin.top - margin.bottom;
+    let max = 250; //d3.max(values);
+    let min = 0; //d3.min(values);
 
-    var max = 250; //d3.max(values);
-    var min = 0; //d3.min(values);
+    this.scaleBarWidth.domain([min, max]).range([0, this.width]);
 
-    // A formatter for counts.
-    var formatCount = d3.format(',.00f');
-
-    var scaleBarWidth = d3
-      .scaleLinear()
-      .domain([min, max])
-      .range([0, width]);
-
-    var data = d3
+    let data = d3
       .histogram()
-      .domain(scaleBarWidth.domain())
-      .thresholds(scaleBarWidth.ticks(ticks))(values);
+      .domain(this.scaleBarWidth.domain())
+      .thresholds(this.scaleBarWidth.ticks(this.ticks))(values);
 
-    var yMax = d3.max(data, function(d) {
+    let yMax = d3.max(data, d => {
       return d.length;
     });
 
-    var yMin = d3.min(data, function(d) {
+    let yMin = d3.min(data, d => {
       return d.length;
     });
 
-    var colorScale = d3
-      .scaleLinear()
+    this.colorScale
       .domain([yMin, yMax])
-      .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
+      .range([d3.rgb(this.color).brighter(), d3.rgb(this.color).darker()]);
 
-    var scaleBarHeight = d3
-      .scaleLinear()
-      .domain([0, yMax])
-      .range([height, 0]);
+    this.scaleBarHeight.domain([0, yMax]).range([this.height, 0]);
 
-    var xAxis = d3.axisBottom().scale(scaleBarWidth);
+    let xAxis = d3.axisBottom().scale(this.scaleBarWidth);
 
-    var rect = this.svgHist
+    let rect = this.svgHist
       .select('g')
       .selectAll('rect')
       .data(data);
@@ -216,18 +188,17 @@ export class Histogram {
     rect
       .transition()
       .duration(100)
-      .attr('y', function(d, i) {
-        return scaleBarHeight(d.length);
+      .attr('y', (d, i) => {
+        return this.scaleBarHeight(d.length);
       })
-      .attr('height', function(d) {
-        return height - scaleBarHeight(d.length);
+      .attr('height', d => {
+        return this.height - this.scaleBarHeight(d.length);
       })
-      .attr('fill', function(d) {
-        return colorScale(d.length);
+      .attr('fill', d => {
+        return this.colorScale(d.length);
       });
 
     d3.selectAll('#texts-hist').remove();
-
 
     this.svgHist
       .append('g')
@@ -235,22 +206,45 @@ export class Histogram {
       .data(data)
       .enter()
       .append('text')
-      .attr('dx', function(d, i) {
-        return width / (ticks * 2) + (i * width) / (ticks - 2) + 3;
+      .attr('dx', (d, i) => {
+        return (
+          this.width / (this.ticks * 2) +
+          (i * this.width) / (this.ticks - 2) +
+          3
+        );
       })
-      .attr('dy', function(d) {
-        return height-15//scaleBarHeight(d.length) - 5;
+      .attr('dy', d => {
+        return this.height - 15; //scaleBarHeight(d.length) - 5;
       })
       .attr('text-anchor', 'middle')
-      .text(function(d, i) {
-        if (i == ticks - 2) {
+      .text((d, i) => {
+        if (i == this.ticks - 2) {
           return '';
         } else {
-          return formatCount(d.length);
+          return this.formatCount(d.length);
         }
       })
       .attr('fill', 'yellow')
       .attr('font-size', '20px')
       .attr('id', 'texts-hist');
+  }
+
+  resize() {
+    this.width =
+      this.containerDiv.clientWidth - this.margin.left - this.margin.right;
+    this.height =
+      this.containerDiv.clientHeight - this.margin.top - this.margin.bottom;
+
+    d3.select(`#${this.divId}`)
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom);
+
+    this.svgHist
+      .select('.x-axis')
+      .attr('transform', `translate(0, ${this.height})`);
+
+    this.svgHist
+      .select('.title-hist')
+      .attr('transform', `translate(${this.width / 2}, ${this.height + 45})`);
   }
 }

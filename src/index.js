@@ -1,5 +1,6 @@
 // Bootstrap
 import 'bootstrap';
+import $ from 'jquery';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // D3
@@ -12,6 +13,7 @@ import { Canvas3D } from './js/Canvas3D';
 import { Canvas2D } from './js/Canvas2D';
 import { Mesh3D } from './js/Mesh3D';
 import { Heatmap } from './js/Heatmap';
+import { LoadGrid } from './js/LoadGrid';
 import { NodeRanking } from './js/NodeRanking';
 import { Histogram } from './js/Histogram';
 import { LineChart } from './js/LineChart';
@@ -24,11 +26,15 @@ import csv0 from './data/IBM_layer0_nodes_volt_js.csv';
 import csv1 from './data/IBM_layer1_nodes_volt_js.csv';
 import csv2 from './data/IBM_layer2_nodes_volt_js.csv';
 import csv3 from './data/IBM_layer3_nodes_volt_js.csv';
+import csv4 from './data/load0.csv';
+import csv5 from './data/load1.csv';
+import csv6 from './data/power.csv';
 
 const canvas3D = new Canvas3D('canvas3d', 'div3d', false);
 const canvas2D = new Canvas2D('canvas2d', 'div2d', true);
 const mesh3D = new Mesh3D();
 const heatmap = new Heatmap();
+const loadGrid = new LoadGrid();
 const toggleButtons = new ToggleButtons();
 const legend = new Legend();
 const nodeRanking = new NodeRanking();
@@ -36,22 +42,38 @@ const histogram = new Histogram();
 const lineChart = new LineChart();
 const play = new Play();
 var layers;
-var currentNode = 0;
+var loads;
+var power;
 
 // Load CSV files
-Promise.all([d3.csv(csv0), d3.csv(csv1), d3.csv(csv2), d3.csv(csv3)]).then(
-  files => {
-    // Save data layers
-    layers = files;
+Promise.all([
+  d3.csv(csv0),
+  d3.csv(csv1),
+  d3.csv(csv2),
+  d3.csv(csv3),
+  d3.csv(csv4),
+  d3.csv(csv5),
+  d3.csv(csv6)
+]).then(files => {
+  // Save data layers
+  layers = [files[0], files[1], files[2], files[3]];
 
-    // Run application
-    run();
-  }
-);
+  // Save load layers
+  loads = [files[4], files[5]];
+  
+  // Save power data
+  power = files[6];
+
+  // Run application
+  run();
+});
 
 function run() {
   // Remove loading message
   document.getElementById('loading').remove();
+  
+  // Show tutorial modal
+  $('#tutorial-modal').modal('show');
 
   // Create 3D mesh
   mesh3D.init(layers);
@@ -62,6 +84,9 @@ function run() {
 
   // Create 2D heatmap
   heatmap.init(layers, canvas2D.divId);
+
+  // Create load grids
+  loadGrid.init(loads);
 
   // Create node ranking table
   nodeRanking.init(layers, lineChart);
@@ -85,6 +110,8 @@ function run() {
     heatmap.update(layers, play.slider.value);
     lineChart.resize();
     lineChart.update(layers, parseInt(lineChart.nodeInput.value));
+    histogram.resize();
+    histogram.update(layers, nodeRanking.currentLayer, play.slider.value);
   };
 
   // 3D / 2D toggle
@@ -120,7 +147,7 @@ function run() {
     // Pause timelapse
     if (play.isPlaying) {
       play.pauseTimelapse();
-    } 
+    }
     // Play timelapse
     else {
       play.playTimelapse();
@@ -137,25 +164,27 @@ function run() {
         heatmap.update(layers, t);
         nodeRanking.update(layers, t, lineChart);
         histogram.update(layers, nodeRanking.currentLayer, t);
+        loadGrid.update(loads, t);
       }, 1000 / play.fps);
     }
   });
 
   // Set slider input change listener
-  play.slider.addEventListener("input", () => {
+  play.slider.addEventListener('input', () => {
     // Pause timelapse
     play.pauseTimelapse();
 
     // Update shapes to current time
     let t = parseInt(play.slider.value) % play.timeLength;
     play.slider.value = t;
-    play.timeInput.value = t
+    play.timeInput.value = t;
 
     // Update shapes to new time
     mesh3D.update(layers, t);
     heatmap.update(layers, t);
     nodeRanking.update(layers, t, lineChart);
     histogram.update(layers, nodeRanking.currentLayer, t);
+    loadGrid.update(loads, t);
   });
 
   // Time input
@@ -177,6 +206,7 @@ function run() {
     heatmap.update(layers, t);
     nodeRanking.update(layers, t, lineChart);
     histogram.update(layers, nodeRanking.currentLayer, t);
+    loadGrid.update(loads, t);
   });
 
   // Node input change
@@ -189,7 +219,7 @@ function run() {
         : 0;
 
     lineChart.nodeInput.value = node;
-    lineChart.update(layers,  node);
+    lineChart.update(layers, node);
   });
 
   // Begin animation loop
