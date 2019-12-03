@@ -7,7 +7,7 @@
   <body style="background-color: #222; color: #ddd;">
     <div class="row">
       <!-- Main view -->
-      <div class="col-xl-6">
+      <div class="col-xl-6 d-flex flex-column">
         <!-- App -->
         <div id="app">
           <div id="loading">Loading data...</div>
@@ -99,27 +99,15 @@
           </div>
         </div>
 
-        <!-- Voltage Info -->
-        <div id="voltage-div-header">
-          <h5>
-            Voltage History - Node :
-            <input
-              type="number"
-              id="node-input"
-              class="form-control form-control-sm text-light bg-dark border-dark"
-              min="0"
-              step="1"
-              value="0"
-            />
-          </h5>
+        <div class="row flex-fill p-3">
+          <div id="load-div-1" class="col"></div>
+          <div id="load-div-2" class="col"></div>
         </div>
-
-        <!-- Voltage graph -->
-        <div id="voltage-div"></div>
       </div>
 
       <!-- Sidebar info -->
-      <div class="col-xl-6">
+      <div class="col-xl-6 d-flex flex-column p-3">
+        <!-- Header -->
         <div id="app-info">
           <!-- Tutorial modal button -->
           <button
@@ -134,60 +122,73 @@
           <h3 id="title">PowerVIS</h3>
 
           <hr class="border-dark" />
+        </div>
 
-          <h5>
-            Node Ranking - Layer :
-            <!-- Layer toggles -->
-            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-              <!-- Layer 0 toggle -->
-              <label
-                class="btn btn-sm btn-dark layer-rank-toggle"
-                id="layer0-rank-toggle"
-                data-layer="0"
-              >
-                <input type="radio" autocomplete="off" checked /> 0
-              </label>
+        <!-- Voltage Info -->
+        <h5 id="voltage-div-header">
+          Voltage History - Node :
+          <input
+            type="number"
+            id="node-input"
+            class="form-control form-control-sm text-light bg-dark border-dark"
+            min="0"
+            step="1"
+            value="0"
+          />
+        </h5>
 
-              <!-- Layer 1 toggle -->
-              <label
-                class="btn btn-sm btn-dark layer-rank-toggle active"
-                id="layer1-rank-toggle"
-                data-layer="1"
-              >
-                <input type="radio" autocomplete="off" checked /> 1
-              </label>
+        <!-- Voltage graph -->
+        <div id="voltage-div" class="flex-fill"></div>
 
-              <!-- Layer 2 toggle -->
-              <label
-                class="btn btn-sm btn-dark layer-rank-toggle"
-                id="layer2-rank-toggle"
-                data-layer="2"
-              >
-                <input type="radio" autocomplete="off" checked /> 2
-              </label>
+        <!-- Node Ranking -->
+        <h5 class="py-3">
+          Layer :
+          <!-- Layer toggles -->
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <!-- Layer 0 toggle -->
+            <label
+              class="btn btn-sm btn-dark layer-rank-toggle"
+              id="layer0-rank-toggle"
+              data-layer="0"
+            >
+              <input type="radio" autocomplete="off" checked /> 0
+            </label>
 
-              <!-- Layer 3 toggle -->
-              <label
-                class="btn btn-sm btn-dark layer-rank-toggle"
-                id="layer3-rank-toggle"
-                data-layer="3"
-              >
-                <input type="radio" autocomplete="off" checked /> 3
-              </label>
-            </div>
-          </h5>
+            <!-- Layer 1 toggle -->
+            <label
+              class="btn btn-sm btn-dark layer-rank-toggle active"
+              id="layer1-rank-toggle"
+              data-layer="1"
+            >
+              <input type="radio" autocomplete="off" checked /> 1
+            </label>
 
+            <!-- Layer 2 toggle -->
+            <label
+              class="btn btn-sm btn-dark layer-rank-toggle"
+              id="layer2-rank-toggle"
+              data-layer="2"
+            >
+              <input type="radio" autocomplete="off" checked /> 2
+            </label>
+
+            <!-- Layer 3 toggle -->
+            <label
+              class="btn btn-sm btn-dark layer-rank-toggle"
+              id="layer3-rank-toggle"
+              data-layer="3"
+            >
+              <input type="radio" autocomplete="off" checked /> 3
+            </label>
+          </div>
+        </h5>
+
+        <div class="d-flex">
           <!-- Node rank list -->
-          <div id="rank-list" class="my-4"></div>
-
-          <hr class="border-dark" />
-
-          <h5>
-            Voltage Drop Distribution
-          </h5>
+          <div id="rank-list"></div>
 
           <!-- Frequency Histogram -->
-          <div id="frequency-div" class="my-4"></div>
+          <div id="frequency-div" class="flex-fill"></div>
         </div>
       </div>
     </div>
@@ -208,6 +209,7 @@
           <div class="modal-body">
             ...
           </div>
+
           <div class="modal-footer">
             <button
               type="button"
