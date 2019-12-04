@@ -85,9 +85,6 @@ function run() {
   canvas3D.addToScene(mesh3D.plane2);
   canvas3D.addToScene(mesh3D.plane3);
 
-  // Create 2D heatmap
-  heatmap.init(layers, canvas2D.divId);
-
   // Create load grids
   loadGrid.init(loads);
 
@@ -101,6 +98,9 @@ function run() {
   // Create line chart
   lineChart.init(layers, 'voltage-linechart', 'voltage-div');
 
+  // Create 2D heatmap
+  heatmap.init(layers, canvas2D.divId, lineChart);
+
   // Enable 3D / 2D toggle buttons
   toggleButtons.init(canvas3D, canvas2D);
 
@@ -111,7 +111,7 @@ function run() {
   window.onresize = () => {
     canvas3D.resize();
     canvas2D.resize();
-    heatmap.update(layers, play.slider.value);
+    heatmap.update(layers, play.slider.value, lineChart);
     lineChart.resize();
     lineChart.update(layers, parseInt(lineChart.nodeInput.value));
     lineChart.updatePoint(layers, parseInt(lineChart.nodeInput.value), play.slider.value);
@@ -128,7 +128,7 @@ function run() {
     if (!this.classList.contains('active')) {
       canvas3D.swapCanvasSize();
       canvas2D.swapCanvasSize();
-      heatmap.update(layers, play.slider.value);
+      heatmap.update(layers, play.slider.value, lineChart);
     }
   }
 
@@ -166,7 +166,7 @@ function run() {
 
         // Update shapes to new time
         mesh3D.update(layers, t);
-        heatmap.update(layers, t);
+        heatmap.update(layers, t, lineChart);
         nodeRanking.update(layers, t, lineChart);
         lineChart.updatePoint(layers, parseInt(lineChart.nodeInput.value), t);
         histogram.update(layers, nodeRanking.currentLayer, t);
@@ -187,7 +187,7 @@ function run() {
 
     // Update shapes to new time
     mesh3D.update(layers, t);
-    heatmap.update(layers, t);
+    heatmap.update(layers, t, lineChart);
     nodeRanking.update(layers, t, lineChart);
     lineChart.updatePoint(layers, parseInt(lineChart.nodeInput.value), t);
     histogram.update(layers, nodeRanking.currentLayer, t);
@@ -209,7 +209,7 @@ function run() {
 
     // Update graphs
     mesh3D.update(layers, t);
-    heatmap.update(layers, t);
+    heatmap.update(layers, t, lineChart);
     nodeRanking.update(layers, t, lineChart);
     lineChart.updatePoint(layers, parseInt(lineChart.nodeInput.value), t);
     histogram.update(layers, nodeRanking.currentLayer, t);

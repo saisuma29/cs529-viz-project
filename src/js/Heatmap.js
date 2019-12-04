@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 export class Heatmap {
-  init(layers, svgId) {
+  init(layers, svgId, lineChart) {
     this.svg0 = d3.select('#heatmap-0');
     this.svg1 = d3.select('#heatmap-1');
     this.svg2 = d3.select('#heatmap-2');
@@ -20,10 +20,10 @@ export class Heatmap {
 
     this.dimensionSize = Math.sqrt(layers[0].length);
 
-    this.update(layers, 0);
+    this.update(layers, 0, lineChart);
   }
 
-  update(layers, timestamp) {
+  update(layers, timestamp, lineChart) {
     let content0 = [];
     let content1 = [];
     let content2 = [];
@@ -56,79 +56,107 @@ export class Heatmap {
       .data(content0)
       .enter()
       .append('rect')
+      .attr('class', 'heatmap-rect')
       .attr('x', (d, i) => this.xScale(i % this.dimensionSize))
       .attr('y', (d, i) => this.yScale(Math.floor(i / this.dimensionSize)))
       .attr('width', x)
       .attr('height', y)
-      .attr('fill', d => this.colorScaleG(d));
+      .attr('fill', d => this.colorScaleG(d))
+      .on('click', function(d, i) {
+        lineChart.nodeInput.value = i;
+        lineChart.update(layers, i, timestamp);
+      });
 
-    this.svg0.append("text")             
-      .attr("transform",
-            "translate(" + (this.svg0.attr('width') / 2) + " ," + 
-                           (20) + ")")
-      .style("text-anchor", "middle")
-      .text("Layer0 (G)")
-      .attr('fill',"black")
-      .attr('font-size', '20px')
+    this.svg0
+      .append('text')
+      .attr(
+        'transform',
+        'translate(' + this.svg0.attr('width') / 2 + ' ,' + 20 + ')'
+      )
+      .style('text-anchor', 'middle')
+      .text('Layer0 (G)')
+      .attr('fill', 'black')
+      .attr('font-size', '20px');
 
     this.svg1
       .selectAll('rect')
       .data(content1)
       .enter()
       .append('rect')
+      .attr('class', 'heatmap-rect')
       .attr('x', (d, i) => this.xScale(i % this.dimensionSize))
       .attr('y', (d, i) => this.yScale(Math.floor(i / this.dimensionSize)))
       .attr('width', x)
       .attr('height', y)
-      .attr('fill', d => this.colorScaleP(d));
+      .attr('fill', d => this.colorScaleP(d))
+      .on('click', function(d, i) {
+        lineChart.nodeInput.value = i;
+        lineChart.update(layers, i, timestamp);
+      });
 
-    this.svg1.append("text")             
-    .attr("transform",
-          "translate(" + (this.svg1.attr('width') / 2) + " ," + 
-                         (20) + ")")
-    .style("text-anchor", "middle")
-    .text("Layer1 (P)")
-    .attr('fill',"black")
-    .attr('font-size', '20px')
+    this.svg1
+      .append('text')
+      .attr(
+        'transform',
+        'translate(' + this.svg1.attr('width') / 2 + ' ,' + 20 + ')'
+      )
+      .style('text-anchor', 'middle')
+      .text('Layer1 (P)')
+      .attr('fill', 'black')
+      .attr('font-size', '20px');
 
     this.svg2
       .selectAll('rect')
       .data(content2)
       .enter()
       .append('rect')
+      .attr('class', 'heatmap-rect')
       .attr('x', (d, i) => this.xScale(i % this.dimensionSize))
       .attr('y', (d, i) => this.yScale(Math.floor(i / this.dimensionSize)))
       .attr('width', x)
       .attr('height', y)
-      .attr('fill', d => this.colorScaleG(d));
+      .attr('fill', d => this.colorScaleG(d))
+      .on('click', function(d, i) {
+        lineChart.nodeInput.value = i;
+        lineChart.update(layers, i, timestamp);
+      });
 
-    this.svg2.append("text")             
-    .attr("transform",
-          "translate(" + (this.svg2.attr('width') / 2) + " ," + 
-                         (20) + ")")
-    .style("text-anchor", "middle")
-    .text("Layer2 (G)")
-    .attr('fill',"black")
-    .attr('font-size', '20px')
+    this.svg2
+      .append('text')
+      .attr(
+        'transform',
+        'translate(' + this.svg2.attr('width') / 2 + ' ,' + 20 + ')'
+      )
+      .style('text-anchor', 'middle')
+      .text('Layer2 (G)')
+      .attr('fill', 'black')
+      .attr('font-size', '20px');
 
     this.svg3
       .selectAll('rect')
       .data(content3)
       .enter()
       .append('rect')
+      .attr('class', 'heatmap-rect')
       .attr('x', (d, i) => this.xScale(i % this.dimensionSize))
       .attr('y', (d, i) => this.yScale(Math.floor(i / this.dimensionSize)))
       .attr('width', x)
       .attr('height', y)
-      .attr('fill', d => this.colorScaleP(d));
+      .attr('fill', d => this.colorScaleP(d))
+      .on('click', function(d, i) {
+        lineChart.nodeInput.value = i;
+        lineChart.update(layers, i, timestamp);
+      });
 
-    this.svg3.append("text")             
-    .attr("transform",
-          "translate(" + (this.svg3.attr('width') / 2) + " ," + 
-                         (20) + ")")
-    .style("text-anchor", "middle")
-    .text("Layer3 (P)")
-    .attr('fill',"black")
-    .attr('font-size', '20px')
+    this.svg3
+      .append('text')
+      .attr(
+        'transform',
+        'translate(' + this.svg3.attr('width') / 2 + ' ,' + 20 + ')'
+      )
+      .style('text-anchor', 'middle')
+      .text('Layer3 (P)')
+      .attr('fill', 'black')
+      .attr('font-size', '20px');
   }
 }

@@ -328,7 +328,6 @@ export class LineChart {
   // // Call the y axis in a group tag
 
   update(layers, node, timestamp) {
-    console.log(timestamp);
     let values3 = Object.values(layers[3][node]);
     let values2 = Object.values(layers[2][node]);
     let values1 = Object.values(layers[1][node]);

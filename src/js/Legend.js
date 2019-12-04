@@ -30,7 +30,7 @@ export class Legend {
     this.legendP = legendColor()
       .labelFormat(d3.format('.03f'))
       .title('Power (P)')
-      .cells(6)
+      .cells(5)
       .orient('vertical')
       .shapePadding(0)
       .scale(this.colorScaleP);
@@ -41,13 +41,13 @@ export class Legend {
     this.svg
       .append('g')
       .attr('class', 'legendG')
-      .attr('transform', 'translate(0,180)')
+      .attr('transform', 'translate(0,170)')
       .style('fill', '#fff');
 
     this.legendG = legendColor()
       .labelFormat(d3.format('.03f'))
       .title('Ground (G)')
-      .cells(6)
+      .cells(5)
       .orient('vertical')
       .shapePadding(0)
       .scale(this.colorScaleG);

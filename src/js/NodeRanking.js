@@ -1,10 +1,15 @@
 import * as d3 from 'd3';
 
 export class NodeRanking {
-  init(layers, lineChart) {
+  init(layers, lineChart, containerId) {
+    this.containerDiv = document.getElementById(containerId);
+    this.margin = { top: 15, right: 0, bottom: 15, left: 0 };
+    this.width = 400; //this.containerDiv.clientWidth - this.margin.left - this.margin.right;
+    this.height =
+      this.containerDiv.clientHeight - this.margin.top - this.margin.bottom;
+
     this.currentLayer = 1;
     var values = [];
-
     var timestamp = 0;
 
     if (this.currentLayer == 1 || this.currentLayer == 3) {
@@ -16,46 +21,37 @@ export class NodeRanking {
         values.push(Math.abs(layers[this.currentLayer][row][timestamp]));
       }
     }
-    // --------------------------------------------
-    // var test = values;
-    // var test_with_index = [];
-    // for (var i in test) {
-    //   test_with_index.push([test[i], i]);
-    // }
-    // test_with_index.sort(function(left, right) {
-    //   return left[0] < right[0] ? -1 : 1;
-    // });
-    // var indexes = [];
-    // test = [];
 
-    // for (var j in test_with_index) {
-    //   test.push(test_with_index[j][0]);
-    //   indexes.push(test_with_index[j][1]);
-    // }
+    var arr = values;
+    var sorted = arr.slice().sort(function(a, b) {
+      return b - a;
+    });
+    var ranks_id = arr.slice().map(function(v) {
+      return sorted.indexOf(v);
+    });
+    var ranks = ranks_id.slice(0, 5);
+    var value = sorted.slice(0, 5);
 
-    // var label_nodes = [];
-    // for (var i = 99; i > -1; i--) {
-    //   label_nodes.push(indexes[i]);
-    // }
-    // // --------------------------------------------
-    // var arr = values;
-    // var sorted = arr.slice().sort(function(a, b) {
-    //   return b - a;
-    // });
-    var arr = values
-    var sorted = arr.slice().sort(function(a,b){return b-a})
-    var ranks_id = arr.slice().map(function(v){ return sorted.indexOf(v)+1 });
-    var ranks = ranks_id.slice(0,10)
-    var value = sorted.slice(0,10)
+    this.color = 'violet';
 
-    var colorScale = d3.scaleSequential(d3.interpolateReds)
-    .domain([0, 0.2]);
+    var colorScale = d3
+      .scaleLinear()
+      .domain([0, 0.3])
+      .range([d3.rgb(this.color).brighter(), d3.rgb(this.color).darker()]);
 
     //create main svg element
     this.svgDoc = d3
       .select('#rank-list')
       .append('svg')
-      .style('height', '100%');
+      .style('height', this.height + this.margin.top + this.margin.bottom);
+    // .style('width', this.width);
+
+    var y = d3
+      .scaleLinear()
+      .domain([0, 0.25])
+      .range([0, this.width - this.margin.left - this.margin.right]);
+
+    var yoffset = (this.height + this.margin.top + this.margin.bottom) / 5;
 
     this.svgDoc
       .append('g')
@@ -64,11 +60,10 @@ export class NodeRanking {
       .enter()
       .append('rect')
       .attr('class', 'rank-rect')
-      .attr('width', function(d, i) {
-        return d * 1000;
-        // return sorted[i]  * 2000
+      .attr('width', function(d) {
+        return y(d);
       })
-      .attr('height', 20)
+      .attr('height', yoffset - 30)
       .attr('fill', function(d, i) {
         return colorScale(d);
       })
@@ -78,13 +73,11 @@ export class NodeRanking {
       })
       .attr('x', 90)
       .attr('y', function(d, i) {
-        return 30 * i;
+        return (yoffset - 20) * i + 50;
       })
       .on('click', function(d, i) {
-        // console.log(d);
-        // console.log(i);
         lineChart.nodeInput.value = ranks[i];
-        lineChart.update(layers, ranks[i]);
+        lineChart.update(layers, ranks[i], 0);
       });
     this.svgDoc
       .append('g')
@@ -94,65 +87,68 @@ export class NodeRanking {
       .append('text')
       .attr('dx', 10)
       .attr('dy', function(d, i) {
-        return 15 + 30 * i;
+        return (yoffset - 20) * i + 70;
       })
       .attr('id', 'texts')
       .text(function(d, i) {
         return `Node ${d}`;
       })
-      .attr('fill', 'white')
-      // .attr('font-size', '18px')
+      .attr('fill', 'white');
+    // .attr('font-size', '18px')
 
+    var x = d3
+      .scaleLinear()
+      .domain([0, 250])
+      .range([90, this.width - this.margin.left - this.margin.right - 90]);
+    var xx = this.height - 20;
+    this.svgDoc
+      .append('g')
+      .attr('transform', 'translate(0,' + xx + ')')
+      .call(d3.axisBottom(x).ticks(3));
+    // .attr('font-size', '20px')
+
+    var xx = this.height + 25;
+
+    this.svgDoc
+      .append('text')
+      .attr('transform', 'translate(' + this.width / 2 + ' ,' + xx + ')')
+      .style('text-anchor', 'middle')
+      .text('Voltage Drop (mV)')
+      .attr('fill', 'white');
+    // .attr('font-size', '20px');
   }
 
   update(layers, timestamp, lineChart) {
     var values = [];
 
     if (this.currentLayer == 1 || this.currentLayer == 3) {
+      this.color = 'violet';
+
       for (var row = 0; row < 100; row++) {
         values.push(Math.abs(1.8 - layers[this.currentLayer][row][timestamp]));
       }
     } else {
       for (var row = 0; row < 100; row++) {
+        this.color = 'yellow';
+
         values.push(Math.abs(layers[this.currentLayer][row][timestamp]));
       }
     }
-    var colorScale = d3.scaleSequential(d3.interpolateReds)
-    .domain([0, 0.2]);
-    // --------------------------------------------
-    // var test = values;
-    // var test_with_index = [];
-    // for (var i in test) {
-    //   test_with_index.push([test[i], i]);
-    // }
-    // test_with_index.sort(function(left, right) {
-    //   return left[0] < right[0] ? -1 : 1;
-    // });
-    // var indexes = [];
-    // test = [];
+    var colorScale = d3
+      .scaleLinear()
+      .domain([0, 0.3])
+      .range([d3.rgb(this.color).brighter(), d3.rgb(this.color).darker()]);
 
-    // for (var j in test_with_index) {
-    //   test.push(test_with_index[j][0]);
-    //   indexes.push(test_with_index[j][1]);
-    // }
+    var arr = values;
+    var sorted = arr.slice().sort(function(a, b) {
+      return b - a;
+    });
+    var ranks_id = arr.slice().map(function(v) {
+      return sorted.indexOf(v);
+    });
+    var ranks = ranks_id.slice(0, 5);
+    var value = sorted.slice(0, 5);
 
-    // var label_nodes = [];
-    // for (var i = 99; i > -1; i--) {
-    //   label_nodes.push(indexes[i]);
-    // }
-    // var arr = values;
-    // var sorted = arr.slice().sort(function(a, b) {
-    //   return b - a;
-    // });
-    // var ranks_id = arr.slice().map(function(v){ return sorted.indexOf(v)+1 });
-
-    // --------------------------------------------
-    var arr = values
-    var sorted = arr.slice().sort(function(a,b){return b-a})
-    var ranks_id = arr.slice().map(function(v){ return sorted.indexOf(v)+1 });
-    var ranks = ranks_id.slice(0,10)
-    var value = sorted.slice(0,10)
-    // var ranks = ranks
     //rejoin data
     var rect = this.svgDoc
       .select('g')
@@ -166,23 +162,11 @@ export class NodeRanking {
       .attr('height', 20);
     //update all bars to new positions
     rect
-    .on('click', function(d, i) {
-      // console.log(d);
-      // console.log(i);
-      lineChart.nodeInput.value = ranks[i];
-      lineChart.update(layers, ranks[i]);
-    })
-    .transition()
-    .duration(100)
-      // .attr('y', function(d, i) {
-      //   for (var j = 0; j < 100; j++) {
-      //     if (i == parseInt(label_nodes[j])) {
-      //       var id_found = j;
-      //     }
-      //   }
-      //   return 30 * id_found; //label_nodes[i]
-      // })
-      .attr("width", function(d, i) {
+      .on('click', function(d, i) {
+        lineChart.nodeInput.value = ranks[i];
+        lineChart.update(layers, ranks[i], timestamp);
+      })
+      .attr('width', function(d, i) {
         return d * 1000;
         // return sorted[i]  * 2000
       })
@@ -192,31 +176,24 @@ export class NodeRanking {
       .attr('fill-opacity', 0.8)
       .attr('stroke', function(d, i) {
         return colorScale(d);
+      });
+    var yoffset = (this.height + this.margin.top + this.margin.bottom) / 5;
+
+    d3.selectAll('#texts').remove();
+    this.svgDoc
+      .append('g')
+      .selectAll('text_bars')
+      .data(ranks)
+      .enter()
+      .append('text')
+      .attr('dx', 10)
+      .attr('dy', function(d, i) {
+        return (yoffset - 20) * i + 70;
       })
-      // .on('click', function(d, i) {
-      //   console.log(d);
-      //   console.log(i);
-
-      //   console.log("farid")
-      //   lineChart.nodeInput.value = 20;
-      //   lineChart.update(layers, 20);
-      // });
-
-      d3.selectAll("#texts").remove();
-      this.svgDoc
-        .append("g")
-        .selectAll("text_bars")
-        .data(ranks)
-        .enter()
-        .append("text")
-        .attr("dx", 10)
-        .attr("dy", function(d, i) {
-          return 15 + 30 * i;
-        })
-        .attr("id", "texts")
-        .text(function(d, i) {
-          return `Node ${d}`;
-        })
-        .attr('fill', 'white');
+      .attr('id', 'texts')
+      .text(function(d, i) {
+        return `Node ${d}`;
+      })
+      .attr('fill', 'white');
   }
 }

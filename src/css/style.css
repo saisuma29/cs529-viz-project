@@ -68,7 +68,7 @@
     bottom: 0px;
     right: 0px;
     width: 90px;
-    height: 320px;
+    height: 300px;
     z-index: 2;
 }
 
@@ -118,7 +118,9 @@
     min-height: 320px;
 }
 
-.rank-rect:hover {
+.heatmap-rect:hover, .rank-rect:hover {
+    stroke: white;
+    opacity: 0.7;
     cursor: pointer;
 }
 
