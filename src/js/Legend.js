@@ -4,9 +4,7 @@ import { legendColor } from 'd3-svg-legend';
 export class Legend {
   constructor() {
     // Color scale G
-    this.colorScaleG = d3
-      .scaleSequential(d3.interpolateWarm)
-      .domain([0.02, 0]);
+    this.colorScaleG = d3.scaleSequential(d3.interpolateWarm).domain([0.02, 0]);
 
     // Color scale P
     this.colorScaleP = d3
@@ -22,18 +20,15 @@ export class Legend {
       .attr('width', this.containerDiv.clientWidth)
       .attr('height', this.containerDiv.clientHeight);
 
-      // svg.select(".legendSequential")
-      //   .style("fill", '#fff')
-      //   .call(legendSequential);
     // legend for 1.6 to 1.8
     this.svg
       .append('g')
       .attr('class', 'legendP')
       .attr('transform', 'translate(0,20)')
-      .style("fill", '#fff')
+      .style('fill', '#fff');
 
     this.legendP = legendColor()
-      .labelFormat(d3.format('.02f'))
+      .labelFormat(d3.format('.03f'))
       .title('Power (P)')
       .cells(6)
       .orient('vertical')
@@ -41,13 +36,13 @@ export class Legend {
       .scale(this.colorScaleP);
 
     this.svg.select('.legendP').call(this.legendP);
-    
+
     // legend for 0.0001 to 0.03
     this.svg
       .append('g')
       .attr('class', 'legendG')
-      .attr('transform', 'translate(0,200)')
-      .style("fill", '#fff')
+      .attr('transform', 'translate(0,180)')
+      .style('fill', '#fff');
 
     this.legendG = legendColor()
       .labelFormat(d3.format('.03f'))

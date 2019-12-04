@@ -29,9 +29,9 @@ import csv0 from './data/IBM_layer0_nodes_volt_js.csv';
 import csv1 from './data/IBM_layer1_nodes_volt_js.csv';
 import csv2 from './data/IBM_layer2_nodes_volt_js.csv';
 import csv3 from './data/IBM_layer3_nodes_volt_js.csv';
-import csv4 from './data/load0.csv';
-import csv5 from './data/load1.csv';
-import csv6 from './data/power.csv';
+import csv4 from './data/load_0.csv';
+import csv5 from './data/load_1.csv';
+import csv6 from './data/power_0.csv';
 
 const canvas3D = new Canvas3D('canvas3d', 'div3d', false);
 const canvas2D = new Canvas2D('canvas2d', 'div2d', true);
@@ -63,7 +63,7 @@ Promise.all([
 
   // Save load layers
   loads = [files[4], files[5]];
-
+  
   // Save power data
   power = files[6];
 
@@ -74,7 +74,7 @@ Promise.all([
 function run() {
   // Remove loading message
   document.getElementById('loading').remove();
-
+  
   // Show tutorial modal
   $('#tutorial-modal').modal('show');
 
@@ -92,7 +92,8 @@ function run() {
   loadGrid.init(loads);
 
   // Create node ranking table
-  nodeRanking.init(layers, lineChart);
+  // nodeRanking.init(layers, lineChart);
+  nodeRanking.init(layers, lineChart, 'rank-list');
 
   // Create histogram
   histogram.init(layers, 'histogram', 'frequency-div');
@@ -113,6 +114,7 @@ function run() {
     heatmap.update(layers, play.slider.value);
     lineChart.resize();
     lineChart.update(layers, parseInt(lineChart.nodeInput.value));
+    lineChart.updatePoint(layers, parseInt(lineChart.nodeInput.value), play.slider.value);
     histogram.resize();
     histogram.update(layers, nodeRanking.currentLayer, play.slider.value);
   };
@@ -166,6 +168,7 @@ function run() {
         mesh3D.update(layers, t);
         heatmap.update(layers, t);
         nodeRanking.update(layers, t, lineChart);
+        lineChart.updatePoint(layers, parseInt(lineChart.nodeInput.value), t);
         histogram.update(layers, nodeRanking.currentLayer, t);
         loadGrid.update(loads, t);
       }, 1000 / play.fps);
@@ -186,6 +189,7 @@ function run() {
     mesh3D.update(layers, t);
     heatmap.update(layers, t);
     nodeRanking.update(layers, t, lineChart);
+    lineChart.updatePoint(layers, parseInt(lineChart.nodeInput.value), t);
     histogram.update(layers, nodeRanking.currentLayer, t);
     loadGrid.update(loads, t);
   });
@@ -207,6 +211,7 @@ function run() {
     mesh3D.update(layers, t);
     heatmap.update(layers, t);
     nodeRanking.update(layers, t, lineChart);
+    lineChart.updatePoint(layers, parseInt(lineChart.nodeInput.value), t);
     histogram.update(layers, nodeRanking.currentLayer, t);
     loadGrid.update(loads, t);
   });
@@ -221,7 +226,8 @@ function run() {
         : 0;
 
     lineChart.nodeInput.value = node;
-    lineChart.update(layers, node);
+    // lineChart.update(layers, node);
+    lineChart.update(layers, node, play.timeInput.value);
   });
 
   // Begin animation loop
