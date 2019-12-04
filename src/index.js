@@ -1,14 +1,17 @@
 // Bootstrap
 import 'bootstrap';
-import $ from 'jquery';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+// JQuery
+import $ from 'jquery';
 
 // D3
 import * as d3 from 'd3';
 
+// Custom CSS
 import './css/style.css';
 
-// Custom classes: Canvas, Square, Plane
+// Custom JS classes
 import { Canvas3D } from './js/Canvas3D';
 import { Canvas2D } from './js/Canvas2D';
 import { Mesh3D } from './js/Mesh3D';
@@ -60,7 +63,7 @@ Promise.all([
 
   // Save load layers
   loads = [files[4], files[5]];
-  
+
   // Save power data
   power = files[6];
 
@@ -71,7 +74,7 @@ Promise.all([
 function run() {
   // Remove loading message
   document.getElementById('loading').remove();
-  
+
   // Show tutorial modal
   $('#tutorial-modal').modal('show');
 
@@ -189,7 +192,6 @@ function run() {
 
   // Time input
   play.timeInput.addEventListener('input', () => {
-    // TODO will break app if invalid input
     play.pauseTimelapse();
 
     // Update shapes to current time (zero if null input)
@@ -231,5 +233,4 @@ function animate() {
 
   // Re-render canvases
   canvas3D.renderer.render(canvas3D.scene, canvas3D.camera);
-  // canvas2D.renderer.render(canvas2D.scene, canvas2D.camera);
 }
