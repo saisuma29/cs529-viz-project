@@ -213,25 +213,25 @@ export class LineChart {
       .append('g')
       .attr('class', 'x axis')
       .attr('transform', 'translate(0,' + xaxis_offset + ')')
-      .call(d3.axisBottom(xfunc));
+      .call(d3.axisBottom(xfunc).ticks(5));
     // .attr('font-size', '20px');
     this.svg2
       .append('g')
       .attr('class', 'x axis')
       .attr('transform', 'translate(0,' + xaxis_offset + ')')
-      .call(d3.axisBottom(xfunc));
+      .call(d3.axisBottom(xfunc).ticks(5));
     // .attr('font-size', '20px');
     this.svg1
       .append('g')
       .attr('class', 'x axis')
       .attr('transform', 'translate(0,' + xaxis_offset + ')')
-      .call(d3.axisBottom(xfunc));
+      .call(d3.axisBottom(xfunc).ticks(5));
     // .attr('font-size', '20px');
     this.svg0
       .append('g')
       .attr('class', 'x axis')
       .attr('transform', 'translate(0,' + xaxis_offset + ')')
-      .call(d3.axisBottom(xfunc));
+      .call(d3.axisBottom(xfunc).ticks(5));
     // .attr('font-size', '20px');
 
     this.svg3
@@ -271,7 +271,7 @@ export class LineChart {
         'translate(' + xlabel_offset + ' ,' + this.height + ')'
       )
       .style('text-anchor', 'middle')
-      .text('Timestamp (6 ps/step)')
+      .text('Time (6 ps/step)')
       .attr('fill', 'white')
       .attr('font-size', '15px');
     this.svg0
@@ -281,7 +281,7 @@ export class LineChart {
         'translate(' + xlabel_offset + ' ,' + this.height + ')'
       )
       .style('text-anchor', 'middle')
-      .text('Timestamp (6 ps/step)')
+      .text('Time (6 ps/step)')
       .attr('fill', 'white')
       .attr('font-size', '15px');
 
@@ -293,7 +293,7 @@ export class LineChart {
       .style('text-anchor', 'middle')
       .text('Voltage (V)')
       .attr('fill', 'white')
-      .attr('font-size', '20px');
+      .attr('font-size', '15px');
     this.svg2
       .append('text')
       .attr('transform', 'rotate(-90)')
@@ -302,7 +302,7 @@ export class LineChart {
       .style('text-anchor', 'middle')
       .text('Voltage (V)')
       .attr('fill', 'white')
-      .attr('font-size', '20px');
+      .attr('font-size', '15px');
     this.svg1
       .append('text')
       .attr('transform', 'rotate(-90)')
@@ -311,7 +311,7 @@ export class LineChart {
       .style('text-anchor', 'middle')
       .text('Voltage (V)')
       .attr('fill', 'white')
-      .attr('font-size', '20px');
+      .attr('font-size', '15px');
 
     this.svg0
       .append('text')
@@ -321,7 +321,7 @@ export class LineChart {
       .style('text-anchor', 'middle')
       .text('Voltage (V)')
       .attr('fill', 'white')
-      .attr('font-size', '20px');
+      .attr('font-size', '15px');
 
     // this.update(layers, 0);
   }

@@ -4,7 +4,7 @@ export class NodeRanking {
   init(layers, lineChart, containerId) {
     this.containerDiv = document.getElementById(containerId);
     this.margin = { top: 15, right: 0, bottom: 15, left: 0 };
-    this.width = 400; //this.containerDiv.clientWidth - this.margin.left - this.margin.right;
+    this.width = this.containerDiv.clientWidth;
     this.height =
       this.containerDiv.clientHeight - this.margin.top - this.margin.bottom;
 
@@ -43,8 +43,8 @@ export class NodeRanking {
     this.svgDoc = d3
       .select('#rank-list')
       .append('svg')
-      .style('height', this.height + this.margin.top + this.margin.bottom);
-    // .style('width', this.width);
+      .style('height', this.height + this.margin.top + this.margin.bottom)
+      .style('width', this.width);
 
     var y = d3
       .scaleLinear()
@@ -93,8 +93,8 @@ export class NodeRanking {
       .text(function(d, i) {
         return `Node ${d}`;
       })
-      .attr('fill', 'white');
-    // .attr('font-size', '18px')
+      .attr('fill', 'white')
+      .attr('font-size', '15px');
 
     var x = d3
       .scaleLinear()
@@ -114,8 +114,8 @@ export class NodeRanking {
       .attr('transform', 'translate(' + this.width / 2 + ' ,' + xx + ')')
       .style('text-anchor', 'middle')
       .text('Voltage Drop (mV)')
-      .attr('fill', 'white');
-    // .attr('font-size', '20px');
+      .attr('fill', 'white')
+      .attr('font-size', '15px');
   }
 
   update(layers, timestamp, lineChart) {
@@ -194,6 +194,7 @@ export class NodeRanking {
       .text(function(d, i) {
         return `Node ${d}`;
       })
-      .attr('fill', 'white');
+      .attr('fill', 'white')
+      .attr('font-size', '15px');
   }
 }

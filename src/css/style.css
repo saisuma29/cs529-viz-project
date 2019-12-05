@@ -105,7 +105,7 @@
 }
 
 #voltage-div {
-    min-height: 300px;
+    /* min-height: 300px; */
 }
 
 /* Info sidebar */
@@ -114,8 +114,8 @@
 }
 
 #rank-list {
-    /* width: 100%; */
-    min-height: 320px;
+    width: 50%;
+    min-height: 275px;
 }
 
 .heatmap-rect:hover, .rank-rect:hover {
@@ -130,6 +130,11 @@
 
 .btn:hover {
     cursor: pointer;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+   opacity: 1;
 }
 
 /* Medium tablet */

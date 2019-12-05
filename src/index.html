@@ -114,7 +114,7 @@
           <!-- Tutorial modal button -->
           <button
             type="button"
-            class="btn btn-sm btn-dark float-right"
+            class="btn btn-sm btn-warning float-right"
             data-toggle="modal"
             data-target="#tutorial-modal"
           >
@@ -143,8 +143,8 @@
         <div id="voltage-div" class="flex-fill"></div>
 
         <!-- Node Ranking -->
-        <h5 class="py-3">
-          Layer :
+        <h5 class="pt-3">
+          Voltage Drop - Layer :
           <!-- Layer toggles -->
           <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <!-- Layer 0 toggle -->
@@ -197,36 +197,75 @@
 
     <!-- Tutorial Modal -->
     <div class="modal fade" id="tutorial-modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" role="document">
         <div class="modal-content text-dark">
           <div class="modal-header">
             <h5 class="modal-title">
               PowerVIS - Tutorial
             </h5>
             <button type="button" class="close" data-dismiss="modal">
-              <span aria-hidden="true">&times;</span>
+              <span>&times;</span>
             </button>
           </div>
 
           <div class="modal-body">
-            <p class="font-weight-bold">Welcome to PowerVIS!</p>
-            <p>
-              This system visualizes on-chip power delivery networks to detect
-              early stage design violations.
-            </p>
-            <p class="font-italic small text-secondary">
-              * Application optimized for 1080p screens
-            </p>
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
+              <div class="carousel-inner">
+                <!-- Slide 1 -->
+                <div class="carousel-item active">
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-item">
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-item">
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                  <p>WASD</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
+            <a class="btn btn-light" href="#carouselExampleIndicators" role="button" data-slide="prev">
+              <span>&lt; Prev</span>
+            </a>
+            <a class="btn btn-light" href="#carouselExampleIndicators" role="button" data-slide="next">
+              <span>Next &gt;</span>
+            </a>
           </div>
         </div>
       </div>
