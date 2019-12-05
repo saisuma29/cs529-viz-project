@@ -53,6 +53,7 @@ export class NodeRanking {
 
     var yoffset = (this.height + this.margin.top + this.margin.bottom) / 5;
 
+    // Create bars
     this.svgDoc
       .append('g')
       .selectAll('rect')
@@ -79,6 +80,8 @@ export class NodeRanking {
         lineChart.nodeInput.value = ranks[i];
         lineChart.update(layers, ranks[i], 0);
       });
+
+    // Create text
     this.svgDoc
       .append('g')
       .selectAll('text_bars')
@@ -101,6 +104,8 @@ export class NodeRanking {
       .domain([0, 250])
       .range([90, this.width - this.margin.left - this.margin.right - 90]);
     var xx = this.height - 20;
+
+    // Create x axis
     this.svgDoc
       .append('g')
       .attr('transform', 'translate(0,' + xx + ')')
@@ -109,6 +114,7 @@ export class NodeRanking {
 
     var xx = this.height + 25;
 
+    // Create x label
     this.svgDoc
       .append('text')
       .attr('transform', 'translate(' + this.width / 2 + ' ,' + xx + ')')
@@ -116,6 +122,14 @@ export class NodeRanking {
       .text('Voltage Drop (mV)')
       .attr('fill', 'white')
       .attr('font-size', '15px');
+
+    this.svgDoc
+      .append('text')
+      .attr('transform', 'translate(' + this.width / 2 + ' , 22)')
+      .style('text-anchor', 'middle')
+      .text('Voltage Drop - Top 5')
+      .attr('fill', 'white')
+      .attr('font-size', '18px');
   }
 
   update(layers, timestamp, lineChart) {

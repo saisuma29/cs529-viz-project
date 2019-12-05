@@ -8,8 +8,8 @@ export class LineChart {
     this.nodeInput.setAttribute('max', layers[0].length);
 
     this.margin = { top: 20, right: 50, bottom: 50, left: 100 };
-    this.width = this.containerDiv.clientWidth / 2;
-    this.height = this.containerDiv.clientHeight / 2;
+    this.width = this.containerDiv.clientWidth / 2 - 1;
+    this.height = this.containerDiv.clientHeight / 2 - 1;
 
     this.svg3 = d3
       .select(this.containerDiv)
@@ -263,7 +263,7 @@ export class LineChart {
     // .attr('font-size', '20px');
 
     // text label for the x axis
-    var xlabel_offset = (this.width + this.margin.left) / 2;
+    var xlabel_offset = (this.width / 2) + (this.margin.left / 2);
     this.svg1
       .append('text')
       .attr(
@@ -447,8 +447,8 @@ export class LineChart {
   }
 
   resize() {
-    this.width = (this.containerDiv.clientWidth - 1) / 2;
-    this.height = (this.containerDiv.clientHeight - 1) / 2;
+    this.width = this.containerDiv.clientWidth / 2 - 1;
+    this.height = this.containerDiv.clientHeight / 2 - 1;
 
     d3.selectAll('.linechart-svg')
       .attr('width', this.width)

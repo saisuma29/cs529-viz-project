@@ -89,7 +89,6 @@ function run() {
   loadGrid.init(loads);
 
   // Create node ranking table
-  // nodeRanking.init(layers, lineChart);
   nodeRanking.init(layers, lineChart, 'rank-list');
 
   // Create histogram
@@ -226,7 +225,6 @@ function run() {
         : 0;
 
     lineChart.nodeInput.value = node;
-    // lineChart.update(layers, node);
     lineChart.update(layers, node, play.timeInput.value);
   });
 

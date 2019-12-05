@@ -91,6 +91,7 @@ export class Histogram {
 
     var xx = this.height + 45;
 
+    // Create x label
     this.svgHist
       .append('text')
       .attr('transform', 'translate(' + this.width / 2 + ' ,' + xx + ')')
@@ -98,6 +99,8 @@ export class Histogram {
       .text('Voltage Drop (mV)')
       .attr('fill', 'white')
       .attr('font-size', '15px');
+
+    // Create y label
     this.svgHist
       .append('text')
       .attr('transform', 'rotate(-90)')
@@ -107,6 +110,15 @@ export class Histogram {
       .text('Frequency')
       .attr('fill', 'white')
       .attr('font-size', '15px');
+
+    // Create title
+    this.svgHist
+      .append('text')
+      .attr('transform', `translate(${this.width / 2} , ${-this.margin.top + 22})`)
+      .style('text-anchor', 'middle')
+      .text('Voltage Drop - Frequency')
+      .attr('fill', 'white')
+      .attr('font-size', '18px');
   }
 
   update(layers, currentLayer, timestamp) {
