@@ -144,7 +144,7 @@
 
         <!-- Node Ranking -->
         <h5>
-          <hr class="border-dark">
+          <hr class="border-dark" />
           Toggle Layer :
           <!-- Layer toggles -->
           <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -198,7 +198,10 @@
 
     <!-- Tutorial Modal -->
     <div class="modal fade" id="tutorial-modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" role="document">
+      <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl"
+        role="document"
+      >
         <div class="modal-content text-dark">
           <div class="modal-header">
             <h5 class="modal-title">
@@ -210,7 +213,12 @@
           </div>
 
           <div class="modal-body">
-            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
+            <div
+              id="carousel-indicators"
+              class="carousel slide"
+              data-ride="carousel"
+              data-interval="false"
+            >
               <div class="carousel-inner">
                 <!-- Slide 1 -->
                 <div class="carousel-item active">
@@ -262,12 +270,22 @@
 
           <div class="modal-footer">
             <div class="m-auto">
-                <a class="btn btn-light" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                  <span>&lt; Prev</span>
-                </a>
-                <a class="btn btn-light" href="#carouselExampleIndicators" role="button" data-slide="next">
-                  <span>Next &gt;</span>
-                </a>
+              <a
+                class="btn btn-primary mx-1"
+                href="#carousel-indicators"
+                role="button"
+                data-slide="prev"
+              >
+                <span>&lt; Prev</span>
+              </a>
+              <a
+                class="btn btn-primary mx-1"
+                href="#carousel-indicators"
+                role="button"
+                data-slide="next"
+              >
+                <span>Next &gt;</span>
+              </a>
             </div>
           </div>
         </div>
