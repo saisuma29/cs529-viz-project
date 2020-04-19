@@ -4,11 +4,11 @@
 
 Visualize on-chip power delivery networks to detect early stage design violations
 
-Demo: https://arre1908.github.io/cs529-viz-project
+Demo: https://saisuma29.github.io/cs529-viz-project/
 
 #### Team Members:
 
-Luis Arredondo, Saisuma Dodda, and Farid Kenarangi
+Saisuma Dodda, Luis Arredondo and Farid Kenarangi
 
 #### Client:
 
